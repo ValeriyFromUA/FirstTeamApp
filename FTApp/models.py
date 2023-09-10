@@ -1,6 +1,4 @@
 from FTApp import db
-from FTApp.run import app
-from flask_login import UserMixin
 
 
 class Specialisation(db.Model):
@@ -69,7 +67,7 @@ class Candidate(db.Model):
     instagram = db.Column(db.String(300), nullable=True)
     linkedin = db.Column(db.String(300), nullable=True)
     phone = db.Column(db.String(20), nullable=True)
-    about = db.Column(db.String(3000), nullable=True)
+    about = db.Column(db.String(5000), nullable=True)
     profile_image = db.Column(db.String(300))
 
     city_id = db.Column(db.Integer, db.ForeignKey('cities.id'))
@@ -127,7 +125,7 @@ class Team(db.Model):
     instagram = db.Column(db.String(300), nullable=True)
     linkedin = db.Column(db.String(300), nullable=True)
     phone = db.Column(db.String(20), nullable=True)
-    about = db.Column(db.String(3000), nullable=True)
+    about = db.Column(db.String(5000), nullable=True)
     profile_image = db.Column(db.String(300))
 
     city_id = db.Column(db.Integer, db.ForeignKey('cities.id'))
@@ -167,7 +165,7 @@ class Opportunity(db.Model):
     english_id = db.Column(db.Integer, db.ForeignKey('english.id'))
     english = db.relationship('English', backref='opportunities')
 
-    description = db.Column(db.String(256))
+    description = db.Column(db.String(5000))
     salary = db.Column(db.Integer)
     creation_date = db.Column(db.DateTime, default=db.func.now())
 
@@ -209,10 +207,21 @@ class EmailConfirmation(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     candidate_id = db.Column(db.Integer, db.ForeignKey('candidates.id'))
     team_id = db.Column(db.Integer, db.ForeignKey('teams.id'))
-    token = db.Column(db.String(128), unique=True, nullable=False)
+    token = db.Column(db.String(200), unique=True, nullable=False)
     creation_date = db.Column(db.DateTime, default=db.func.now())
 
     def __init__(self, token, user_id=None, team_id=None):
         self.user_id = user_id
         self.team_id = team_id
         self.token = token
+
+
+class Complaint(db.Model):
+    __tablename__ = 'complaints'
+
+    id = db.Column(db.Integer, primary_key=True)
+    candidate_id = db.Column(db.Integer, db.ForeignKey('candidates.id'))
+    opportunity_id = db.Column(db.Integer, db.ForeignKey('opportunities.id'))
+    opportunity = db.relationship('Opportunity', backref='complaints')
+    creation_date = db.Column(db.DateTime, default=db.func.now())
+    description = db.Column(db.String(5000))

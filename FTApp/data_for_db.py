@@ -101,27 +101,22 @@ SPECIALISATIONS = [
 
 
 def add_data_to_database():
-    # Додавання міст
     for city_name in CITY_LIST:
         city = City(name=city_name)
         db.session.add(city)
 
-    # Додавання рівнів англійської
     for level_name in LANG_LEVELS:
         english_level = English(level=level_name)
         db.session.add(english_level)
 
-    # Додавання рівнів досвіду
     for exp_name in EXP_LEVEL:
         experience_level = Experience(name=exp_name)
         db.session.add(experience_level)
 
-    # Додавання спеціалізацій
     for spec_name in SPECIALISATIONS:
         specialisation = Specialisation(name=spec_name)
         db.session.add(specialisation)
 
-    # Зберігання змін до бази даних
     db.session.commit()
 
 
