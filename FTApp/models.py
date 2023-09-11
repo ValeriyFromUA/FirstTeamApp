@@ -1,4 +1,5 @@
-from FTApp import db
+from flask_login import UserMixin
+from FTApp import db, login_manager
 
 
 class Specialisation(db.Model):
@@ -34,7 +35,7 @@ class Experience(db.Model):
         self.name = name
 
 
-class Administrator(db.Model):
+class Administrator(db.Model, UserMixin):
     __tablename__ = 'administrators'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     email = db.Column(db.String(128), nullable=False, unique=True)
@@ -52,7 +53,7 @@ class Administrator(db.Model):
         self.username = username
 
 
-class Candidate(db.Model):
+class Candidate(db.Model, UserMixin):
     __tablename__ = 'candidates'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     email = db.Column(db.String(128), nullable=False, unique=True)
@@ -110,7 +111,7 @@ class Candidate(db.Model):
         self.experience = experience
 
 
-class Team(db.Model):
+class Team(db.Model, UserMixin):
     __tablename__ = 'teams'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     email = db.Column(db.String(128), nullable=False, unique=True)
@@ -148,6 +149,17 @@ class Team(db.Model):
         self.about = about
         self.profile_image = profile_image
         self.city = city
+
+
+@login_manager.user_loader
+def load_user(user_id, user_type):
+    if user_type == 'Candidate':
+        return Candidate.query.get(user_id)
+    elif user_type == 'Team':
+        return Team.query.get(user_id)
+    elif user_type == 'Administrator':
+        return Administrator.query.get(user_id)
+    return None
 
 
 class Opportunity(db.Model):

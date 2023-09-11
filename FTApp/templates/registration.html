@@ -1,5 +1,79 @@
 {% extends 'base.html' %}
 {% block title %} {{title}}{% endblock %}
 {% block content %}
+<form method="POST" enctype="multipart/form-data" action="">
+    {{ candidate_form.hidden_tag() }}
+    {% if candidate_form.errors %}
+    {{ candidate_form.errors }}
+    {% endif %}
+    <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input type="email" class="form-control" id="email" name="email" required>
+    </div>
+    <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <input type="password" class="form-control" id="password" name="password" required>
+    </div>
+    <div class="mb-3">
+        <label for="confirm_password" class="form-label">Confirm Password</label>
+        <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
+    </div>
+
+    <div class="mb-3">
+        <label for="first_name" class="form-label">First Name</label>
+        <input type="text" class="form-control" id="first_name" name="first_name" required>
+    </div>
+    <div class="mb-3">
+        <label for="last_name" class="form-label">Last Name</label>
+        <input type="text" class="form-control" id="last_name" name="last_name" required>
+    </div>
+
+    <div class="mb-3">
+        <label for="profile_image" class="form-label">Profile Image</label>
+        <input type="file" class="form-control" id="profile_image" name="profile_image">
+    </div>
+
+    <div class="mb-3">
+        <label for="cv" class="form-label">CV</label>
+        <input type="file" class="form-control" id="cv" name="cv">
+    </div>
+    <div class="form-group">
+        <label for="city">City:</label>
+        <select class="form-control" id="city" name="city">
+            {% for city_id, city_name in cities %}
+            <option value="{{ city_id }}">{{ city_name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="english">English Level:</label>
+        <select class="form-control" id="english" name="english">
+            {% for english_id, english_level in english_levels %}
+            <option value="{{ english_id }}">{{ english_level }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="specialisation">Specialisation:</label>
+        <select class="form-control" id="specialisation" name="specialisation">
+            {% for specialisation_id, specialisation_name in specialisations %}
+            <option value="{{ specialisation_id }}">{{ specialisation_name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="experience">Experience:</label>
+        <select class="form-control" id="experience" name="experience">
+            {% for experience_id, experience_name in experiences %}
+            <option value="{{ experience_id }}">{{ experience_name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary" value="Register as Candidate">Register as Candidate</button>
+</form>
 
 {% endblock %}
