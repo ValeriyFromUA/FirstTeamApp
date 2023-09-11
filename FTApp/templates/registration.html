@@ -1,79 +1,226 @@
 {% extends 'base.html' %}
 {% block title %} {{title}}{% endblock %}
 {% block content %}
-<form method="POST" enctype="multipart/form-data" action="">
-    {{ candidate_form.hidden_tag() }}
-    {% if candidate_form.errors %}
-    {{ candidate_form.errors }}
-    {% endif %}
-    <div class="mb-3">
-        <label for="email" class="form-label">Email</label>
-        <input type="email" class="form-control" id="email" name="email" required>
-    </div>
-    <div class="mb-3">
-        <label for="password" class="form-label">Password</label>
-        <input type="password" class="form-control" id="password" name="password" required>
-    </div>
-    <div class="mb-3">
-        <label for="confirm_password" class="form-label">Confirm Password</label>
-        <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
-    </div>
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#Candidate">
+    Я шукаю команду
+</button>
 
-    <div class="mb-3">
-        <label for="first_name" class="form-label">First Name</label>
-        <input type="text" class="form-control" id="first_name" name="first_name" required>
-    </div>
-    <div class="mb-3">
-        <label for="last_name" class="form-label">Last Name</label>
-        <input type="text" class="form-control" id="last_name" name="last_name" required>
-    </div>
+<div class="modal fade" id="Candidate">
+    <div class="modal-dialog">
+        <div class="modal-content">
 
-    <div class="mb-3">
-        <label for="profile_image" class="form-label">Profile Image</label>
-        <input type="file" class="form-control" id="profile_image" name="profile_image">
-    </div>
+            <!-- Заголовок модального вікна -->
+            <div class="modal-header">
+                <h4 class="modal-title">Форма кандидата</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
 
-    <div class="mb-3">
-        <label for="cv" class="form-label">CV</label>
-        <input type="file" class="form-control" id="cv" name="cv">
-    </div>
-    <div class="form-group">
-        <label for="city">City:</label>
-        <select class="form-control" id="city" name="city">
-            {% for city_id, city_name in cities %}
-            <option value="{{ city_id }}">{{ city_name }}</option>
-            {% endfor %}
-        </select>
-    </div>
+            <!-- Тіло модального вікна з формою -->
+            <div class="modal-body">
+                <form method="POST" enctype="multipart/form-data" action="">
+                    {{ candidate_form.hidden_tag() }}
+                    {% if candidate_form.errors %}
+                    {{ candidate_form.errors }}
+                    {% endif %}
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Введіть електронну пошту</label>
+                        <input type="email" class="form-control" id="email" name="email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Вигадайте пароль</label>
+                        <input type="password" class="form-control" id="password" name="password" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="confirm_password" class="form-label">Повторіть пароль</label>
+                        <input type="password" class="form-control" id="confirm_password" name="confirm_password"
+                               required>
+                    </div>
 
-    <div class="form-group">
-        <label for="english">English Level:</label>
-        <select class="form-control" id="english" name="english">
-            {% for english_id, english_level in english_levels %}
-            <option value="{{ english_id }}">{{ english_level }}</option>
-            {% endfor %}
-        </select>
+                    <div class="mb-3">
+                        <label for="first_name" class="form-label">Ім'я</label>
+                        <input type="text" class="form-control" id="first_name" name="first_name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="last_name" class="form-label">Прізвище</label>
+                        <input type="text" class="form-control" id="last_name" name="last_name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="telegram" class="form-label">Telegram</label>
+                        <input type="text" class="form-control" id="telegram" name="telegram" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="facebook" class="form-label">Facebook</label>
+                        <input type="text" class="form-control" id="facebook" name="facebook">
+                    </div>
+                    <div class="mb-3">
+                        <label for="instagram" class="form-label">Instagram</label>
+                        <input type="text" class="form-control" id="instagram" name="instagram">
+                    </div>
+                    <div class="mb-3">
+                        <label for="linkedin" class="form-label">LinkedIn</label>
+                        <input type="text" class="form-control" id="linkedin" name="linkedin" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="phone" class="form-label">Телефон</label>
+                        <input type="text" class="form-control" id="phone" name="phone" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="about" class="form-label">Напишіть кілька слів про себе</label>
+                        <textarea class="form-control" id="about" name="about" rows="5"></textarea>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="city">Місто:</label>
+                        <select class="form-control" id="city" name="city" required>
+                            <option value="" disabled selected></option>
+                            {% for city_id, city_name in cities %}
+                            <option value="{{ city_id }}">{{ city_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="english">Рівень володіння Англійською мовою:</label>
+                        <select class="form-control" id="english" name="english" required>
+                            <option value="" disabled selected></option>
+                            {% for english_id, english_level in english_levels %}
+                            <option value="{{ english_id }}">{{ english_level }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="specialisation">Оберіть мову Вашу програмування або спеціалізацію:</label>
+                        <select class="form-control" id="specialisation" name="specialisation" required>
+                            <option value="" disabled selected></option>
+                            {% for specialisation_id, specialisation_name in specialisations %}
+                            <option value="{{ specialisation_id }}">{{ specialisation_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="experience">Ваш досвід в розробці:</label>
+                        <select class="form-control" id="experience" name="experience" required>
+                            <option value="" disabled selected></option>
+                            {% for experience_id, experience_name in experiences %}
+                            <option value="{{ experience_id }}">{{ experience_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="profile_image" class="form-label">Додайте фото</label>
+                        <input type="file" class="form-control" id="profile_image" name="profile_image">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="cv" class="form-label">Додайте резюме</label>
+                        <input type="file" class="form-control" id="cv" name="cv">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" value="Register as Candidate">Зареєструватися
+                    </button>
+                </form>
+            </div>
+
+            <!-- Нижня частина модального вікна з кнопкою закриття -->
+
+        </div>
     </div>
+</div>
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#Team">
+    Я шукаю кандидатів
+</button>
 
-    <div class="form-group">
-        <label for="specialisation">Specialisation:</label>
-        <select class="form-control" id="specialisation" name="specialisation">
-            {% for specialisation_id, specialisation_name in specialisations %}
-            <option value="{{ specialisation_id }}">{{ specialisation_name }}</option>
-            {% endfor %}
-        </select>
+<div class="modal fade" id="Team">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- Заголовок модального вікна -->
+            <div class="modal-header">
+                <h4 class="modal-title">Форма команди</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <!-- Тіло модального вікна з формою -->
+            <div class="modal-body">
+                <form method="POST" enctype="multipart/form-data" action="">
+                    {{ team_form.hidden_tag() }}
+                    {% if team_form.errors %}
+                    {{ team_form.errors }}
+                    {% endif %}
+                    <div class="mb-3">
+                        <label for="team_email" class="form-label">Введіть електронну пошту</label>
+                        <input type="text" class="form-control" id="team_email" name="team_email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="team_password" class="form-label">Вигадайте пароль</label>
+                        <input type="password" class="form-control" id="team_password" name="team_password" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="team_confirm_password" class="form-label">Повторіть пароль</label>
+                        <input type="password" class="form-control" id="team_confirm_password"
+                               name="team_confirm_password"
+                               required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="team_company" class="form-label">Назва компанії</label>
+                        <input type="text" class="form-control" id="team_company" name="team_company" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="team_website" class="form-label">Сайт компанії</label>
+                        <input type="text" class="form-control" id="team_website" name="team_website" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="team_telegram" class="form-label">Telegram</label>
+                        <input type="text" class="form-control" id="team_telegram" name="team_telegram" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="team_facebook" class="form-label">Facebook</label>
+                        <input type="text" class="form-control" id="team_facebook" name="team_facebook">
+                    </div>
+                    <div class="mb-3">
+                        <label for="team_instagram" class="form-label">Instagram</label>
+                        <input type="text" class="form-control" id="team_instagram" name="team_instagram">
+                    </div>
+                    <div class="mb-3">
+                        <label for="team_linkedin" class="form-label">LinkedIn</label>
+                        <input type="text" class="form-control" id="team_linkedin" name="team_linkedin" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="team_phone" class="form-label">Телефон</label>
+                        <input type="text" class="form-control" id="team_phone" name="team_phone" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="team_about" class="form-label">Напишіть кілька слів про себе</label>
+                        <textarea class="form-control" id="team_about" name="team_about" rows="5"></textarea>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="team_city">Місто:</label>
+                        <select class="form-control" id="team_city" name="team_city" required>
+                            <option value="" disabled selected></option>
+                            {% for city_id, city_name in cities %}
+                            <option value="{{ city_id }}">{{ city_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="team_profile_image" class="form-label">Додайте лого компанії</label>
+                        <input type="file" class="form-control" id="team_profile_image" name="team_profile_image">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" value="Register as Team">Зареєструватися
+                    </button>
+                </form>
+            </div>
+
+            <!-- Нижня частина модального вікна з кнопкою закриття -->
+
+        </div>
     </div>
-
-    <div class="form-group">
-        <label for="experience">Experience:</label>
-        <select class="form-control" id="experience" name="experience">
-            {% for experience_id, experience_name in experiences %}
-            <option value="{{ experience_id }}">{{ experience_name }}</option>
-            {% endfor %}
-        </select>
-    </div>
-
-    <button type="submit" class="btn btn-primary" value="Register as Candidate">Register as Candidate</button>
-</form>
-
+</div>
 {% endblock %}

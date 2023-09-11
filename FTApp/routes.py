@@ -1,3 +1,4 @@
+import os
 from datetime import datetime
 
 from flask import Blueprint, render_template, request, redirect, url_for, flash
@@ -6,6 +7,7 @@ from flask_uploads import UploadSet, configure_uploads, IMAGES, DOCUMENTS, Uploa
 from werkzeug.utils import secure_filename
 
 from FTApp import db
+from FTApp.constants import CANDIDATE_PIC_DIR, CV_DIR, TEAM_LOGO_DIR
 from FTApp.forms import CandidateRegistrationForm, TeamRegistrationForm
 from FTApp.models import Candidate, Team, Opportunity, City, English, Experience, Specialisation
 
@@ -41,38 +43,35 @@ def registration():
     candidate_form = CandidateRegistrationForm()
     team_form = TeamRegistrationForm()
     if request.method == 'POST':
-        print(candidate_form.validate_on_submit())
-        print('************************************')
-        print(candidate_form.submit.data)
         if candidate_form.validate_on_submit():
-            print(1, candidate_form.email.data)
             existing_user = Candidate.query.filter_by(email=candidate_form.email.data).first()
             if existing_user is None:
                 selected_city_id = candidate_form.city.data
-                selected_city = City.query.get(selected_city_id)  # Знайти об'єкт міста за ID
+                selected_city = City.query.get(selected_city_id)
 
                 selected_english_id = candidate_form.english.data
-                selected_english = English.query.get(selected_english_id)  # Знайти об'єкт рівня англійської мови за ID
+                selected_english = English.query.get(selected_english_id)
 
                 selected_specialisation_id = candidate_form.specialisation.data
                 selected_specialisation = Specialisation.query.get(
-                    selected_specialisation_id)  # Знайти об'єкт спеціалізації за ID
+                    selected_specialisation_id)
 
                 selected_experience_id = candidate_form.experience.data
-                selected_experience = Experience.query.get(selected_experience_id)  # Знайти об'єкт досвіду за ID
-                print(2, candidate_form.email.data)
+                selected_experience = Experience.query.get(selected_experience_id)
                 try:
                     profile_image = candidate_form.profile_image.data
                     cv = candidate_form.cv.data
                     if profile_image:
                         profile_image_filename = f'{filename_prefix}_{secure_filename(profile_image.filename)}'
-                        profile_image.save(profile_image_filename)
+                        full_pic_path = os.path.join(CANDIDATE_PIC_DIR, profile_image_filename)
+                        profile_image.save(full_pic_path)
                     else:
                         profile_image_filename = None
 
                     if cv:
                         cv_filename = f'{filename_prefix}_{secure_filename(cv.filename)}'
-                        cv.save(cv_filename)
+                        full_cv_path = os.path.join(CV_DIR, cv_filename)
+                        cv.save(full_cv_path)
                     else:
                         cv_filename = None
 
@@ -88,44 +87,56 @@ def registration():
                         phone=candidate_form.phone.data,
                         about=candidate_form.about.data,
                         profile_image=profile_image_filename,
-                        city=selected_city,  # Зберегти об'єкт міста, а не ID
+                        city=selected_city,
                         cv=cv_filename,
-                        english=selected_english,  # Зберегти об'єкт рівня англійської мови, а не ID
-                        specialisation=selected_specialisation,  # Зберегти об'єкт спеціалізації, а не ID
-                        experience=selected_experience,  # Зберегти об'єкт досвіду, а не ID
+                        english=selected_english,
+                        specialisation=selected_specialisation,
+                        experience=selected_experience,
                     )
 
                     db.session.add(new_user)
                     db.session.commit()
 
-                    return redirect(url_for('core.main'))  # Перенаправте на сторінку логіну після реєстрації
+                    return redirect(url_for('core.main'))
 
                 except UploadNotAllowed:
-                    print(UploadNotAllowed)
                     flash('Invalid file type. Upload images or PDFs only.', 'danger')
 
-    #     elif team_form.validate_on_submit() and team_form.submit.data:
-    #         existing_user = Team.query.filter_by(email=team_form.email.data).first()
-    #         if existing_user is None:
-    #             # Створення нового користувача з даними з форми
-    #             new_user = Team(
-    #                 email=team_form.email.data,
-    #                 password=team_form.password.data,
-    #                 company=team_form.company.data,
-    #                 website=team_form.website.data,
-    #                 telegram=team_form.telegram.data,
-    #                 facebook=team_form.facebook.data,
-    #                 instagram=team_form.instagram.data,
-    #                 linkedin=team_form.linkedin.data,
-    #                 phone=team_form.phone.data,
-    #                 about=team_form.about.data,
-    #                 profile_image=team_form.profile_image.data,
-    #                 city=team_form.city.data,
-    #                 # Додайте інші поля з форми сюди
-    #             )
-    # # Обробка реєстрації команди
-    # # ...
-    return render_template('registration.html', title='Registration', candidate_form=candidate_form, cities=cities,
+        elif team_form.validate_on_submit():
+            existing_user = Team.query.filter_by(email=team_form.team_email.data).first()
+            if existing_user is None:
+                selected_city_id = team_form.team_city.data
+                selected_city = City.query.get(selected_city_id)
+                try:
+                    profile_image = team_form.team_profile_image.data
+                    if profile_image:
+                        profile_image_filename = f'{filename_prefix}_{secure_filename(profile_image.filename)}'
+                        full_pic_path = os.path.join(TEAM_LOGO_DIR, profile_image_filename)
+                        profile_image.save(full_pic_path)
+                    else:
+                        profile_image_filename = None
+
+                    new_team = Team(
+                        email=team_form.team_email.data,
+                        password=team_form.team_password.data,
+                        company=team_form.team_company.data,
+                        website=team_form.team_website.data,
+                        telegram=team_form.team_telegram.data,
+                        facebook=team_form.team_facebook.data,
+                        instagram=team_form.team_instagram.data,
+                        linkedin=team_form.team_linkedin.data,
+                        phone=team_form.team_phone.data,
+                        about=team_form.team_about.data,
+                        profile_image=profile_image_filename,
+                        city=selected_city
+                    )
+                    db.session.add(new_team)
+                    db.session.commit()
+                    return redirect(url_for('core.main'))
+                except UploadNotAllowed:
+                    flash('Invalid file type. Upload images or PDFs only.', 'danger')
+    return render_template('registration.html', title='Registration', candidate_form=candidate_form,
+                           team_form=team_form, cities=cities,
                            english_levels=english_levels,
                            specialisations=specialisations, experiences=experiences)
 

@@ -37,22 +37,22 @@ class CandidateRegistrationForm(FlaskForm):
 
 
 class TeamRegistrationForm(FlaskForm):
-    email = StringField('Email', validators=[DataRequired(), Email()])
-    password = PasswordField('Password', validators=[DataRequired()])
-    confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
-    company = StringField('Company', validators=[DataRequired()])
-    website = StringField('Website', validators=[DataRequired()])
-    telegram = StringField('Telegram')
-    facebook = StringField('Facebook')
-    instagram = StringField('Instagram')
-    linkedin = StringField('LinkedIn')
-    phone = StringField('Phone')
-    about = TextAreaField('About')
-    profile_image = FileField('Profile Image URL')
-    city = SelectField('City', validators=[DataRequired()], coerce=int)
-    submit = SubmitField('Register as Team')
+    team_email = StringField('Email', validators=[DataRequired(), Email()])
+    team_password = PasswordField('Password', validators=[DataRequired()])
+    team_confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('team_password')])
+    team_company = StringField('Company', validators=[DataRequired()])
+    team_website = StringField('Website', validators=[DataRequired()])
+    team_telegram = StringField('Telegram')
+    team_facebook = StringField('Facebook')
+    team_instagram = StringField('Instagram')
+    team_linkedin = StringField('LinkedIn')
+    team_phone = StringField('Phone')
+    team_about = TextAreaField('About')
+    team_profile_image = FileField('Profile Image URL')
+    team_city = SelectField('City', validators=[DataRequired()], coerce=int)
+    team_submit = SubmitField('Register as Team')
 
     def __init__(self, *args, **kwargs):
         super(TeamRegistrationForm, self).__init__(*args, **kwargs)
 
-        self.city.choices = [(city.id, city.name) for city in City.query.all()]
+        self.team_city.choices = [(city.id, city.name) for city in City.query.all()]
