@@ -129,5 +129,5 @@ dmypy.json
 prod.env
 
 # local file storage folders
-/web/static
-/web/media/
+/FTApp/static
+/FTApp/media/

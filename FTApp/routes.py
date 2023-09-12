@@ -6,7 +6,7 @@ from flask_login import current_user
 from flask_uploads import UploadSet, configure_uploads, IMAGES, DOCUMENTS, UploadNotAllowed
 from werkzeug.utils import secure_filename
 
-from FTApp import db
+from FTApp import db, bcrypt
 from FTApp.constants import CANDIDATE_PIC_DIR, CV_DIR, TEAM_LOGO_DIR
 from FTApp.forms import CandidateRegistrationForm, TeamRegistrationForm
 from FTApp.models import Candidate, Team, Opportunity, City, English, Experience, Specialisation
@@ -77,13 +77,14 @@ def registration():
 
                     new_user = Candidate(
                         email=candidate_form.email.data,
-                        password=candidate_form.password.data,
+                        password=bcrypt.generate_password_hash(candidate_form.password.data).decode('utf-8'),
                         first_name=candidate_form.first_name.data,
                         last_name=candidate_form.last_name.data,
                         telegram=candidate_form.telegram.data,
                         facebook=candidate_form.facebook.data,
                         instagram=candidate_form.instagram.data,
                         linkedin=candidate_form.linkedin.data,
+                        github=candidate_form.github.data,
                         phone=candidate_form.phone.data,
                         about=candidate_form.about.data,
                         profile_image=profile_image_filename,
@@ -118,7 +119,7 @@ def registration():
 
                     new_team = Team(
                         email=team_form.team_email.data,
-                        password=team_form.team_password.data,
+                        password=bcrypt.generate_password_hash(team_form.team_password.data).decode('utf-8'),
                         company=team_form.team_company.data,
                         website=team_form.team_website.data,
                         telegram=team_form.team_telegram.data,

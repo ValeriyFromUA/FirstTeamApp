@@ -1,8 +1,8 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField, SelectField, FileField
-from wtforms.validators import DataRequired, Email, EqualTo
+from wtforms.validators import DataRequired, Email, EqualTo, ValidationError
 
-from FTApp.models import Specialisation, English, City, Experience
+from FTApp.models import Specialisation, English, City, Experience, Candidate
 
 
 class CandidateRegistrationForm(FlaskForm):
@@ -15,6 +15,7 @@ class CandidateRegistrationForm(FlaskForm):
     facebook = StringField('Facebook')
     instagram = StringField('Instagram')
     linkedin = StringField('LinkedIn')
+    github = StringField('GitHub')
     phone = StringField('Phone')
     about = TextAreaField('About')
     profile_image = FileField('Profile Image URL')
@@ -34,6 +35,16 @@ class CandidateRegistrationForm(FlaskForm):
         self.specialisation.choices = [(specialisation.id, specialisation.name) for specialisation in
                                        Specialisation.query.all()]
         self.experience.choices = [(experience.id, experience.name) for experience in Experience.query.all()]
+
+    def validate_email(self, email):
+        user = Candidate.query.filter_by(email=email.data).first()
+        if user is not None:
+            raise ValidationError('Email exists, please pick another one')
+
+    def validate_phone(self, phone):
+        user = Candidate.query.filter_by(phone=phone.data).first()
+        if user is not None:
+            raise ValidationError('Phone exists, please pick another one')
 
 
 class TeamRegistrationForm(FlaskForm):
@@ -56,3 +67,18 @@ class TeamRegistrationForm(FlaskForm):
         super(TeamRegistrationForm, self).__init__(*args, **kwargs)
 
         self.team_city.choices = [(city.id, city.name) for city in City.query.all()]
+
+    def validate_email(self, team_email):
+        user = Candidate.query.filter_by(email=team_email.data).first()
+        if user is not None:
+            raise ValidationError('Email exists, please pick another one')
+
+    def validate_phone(self, team_phone):
+        user = Candidate.query.filter_by(phone=team_phone.data).first()
+        if user is not None:
+            raise ValidationError('Phone exists, please pick another one')
+
+    def validate_company(self, team_company):
+        user = Candidate.query.filter_by(phone=team_company.data).first()
+        if user is not None:
+            raise ValidationError('Company exists, please pick another one')

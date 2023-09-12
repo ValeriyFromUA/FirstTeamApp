@@ -67,6 +67,8 @@ class Candidate(db.Model, UserMixin):
     facebook = db.Column(db.String(300), nullable=True)
     instagram = db.Column(db.String(300), nullable=True)
     linkedin = db.Column(db.String(300), nullable=True)
+    github = db.Column(db.String(300), nullable=True)
+
     phone = db.Column(db.String(20), nullable=True)
     about = db.Column(db.String(5000), nullable=True)
     profile_image = db.Column(db.String(300))
@@ -88,7 +90,7 @@ class Candidate(db.Model, UserMixin):
     # responses = db.relationship('Response', backref='candidate',
     #                             primaryjoin='Candidate.id == Response.candidate_id')
 
-    def __init__(self, email, password, first_name, last_name, city=None, telegram=None,
+    def __init__(self, email, password, first_name, last_name, city=None, github=None, telegram=None,
                  facebook=None, instagram=None, linkedin=None, phone=None, about=None,
                  profile_image=None, cv=None, english=None, specialisation=None, experience=None):
         self.email = email
@@ -101,6 +103,7 @@ class Candidate(db.Model, UserMixin):
         self.facebook = facebook
         self.instagram = instagram
         self.linkedin = linkedin
+        self.github = github
         self.phone = phone
         self.about = about
         self.profile_image = profile_image

@@ -1,9 +1,20 @@
 {% extends 'base.html' %}
 {% block title %} {{title}}{% endblock %}
 {% block content %}
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#Candidate">
-    Я шукаю команду
-</button>
+<div class="container d-flex justify-content-center">
+    <h1>Що шукаємо?</h1>
+</div>
+
+<div class="container d-flex justify-content-center">
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#Candidate">
+        Я шукаю команду
+    </button>
+    <div class="mx-2"></div>
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#Team">
+        Я шукаю кандидатів
+    </button>
+</div>
+
 
 <div class="modal fade" id="Candidate">
     <div class="modal-dialog">
@@ -24,7 +35,8 @@
                     {% endif %}
                     <div class="mb-3">
                         <label for="email" class="form-label">Введіть електронну пошту</label>
-                        <input type="email" class="form-control" id="email" name="email" required>
+                        <input type="email" class="form-control" id="email" name="email" required
+                               pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$">
                     </div>
                     <div class="mb-3">
                         <label for="password" class="form-label">Вигадайте пароль</label>
@@ -46,23 +58,32 @@
                     </div>
                     <div class="mb-3">
                         <label for="telegram" class="form-label">Telegram</label>
-                        <input type="text" class="form-control" id="telegram" name="telegram" required>
+                        <input type="text" class="form-control" id="telegram" name="telegram">
                     </div>
                     <div class="mb-3">
                         <label for="facebook" class="form-label">Facebook</label>
-                        <input type="text" class="form-control" id="facebook" name="facebook">
+                        <input type="text" class="form-control" id="facebook" name="facebook"
+                               pattern="https:\/\/www\.facebook\.com\/.*" placeholder="https://www.facebook.com/">
                     </div>
                     <div class="mb-3">
                         <label for="instagram" class="form-label">Instagram</label>
-                        <input type="text" class="form-control" id="instagram" name="instagram">
+                        <input type="text" class="form-control" id="instagram" name="instagram"
+                               pattern="https:\/\/www\.instagram\.com\/.*" placeholder="https://www.instagram.com/">
                     </div>
                     <div class="mb-3">
                         <label for="linkedin" class="form-label">LinkedIn</label>
-                        <input type="text" class="form-control" id="linkedin" name="linkedin" required>
+                        <input type="text" class="form-control" id="linkedin" name="linkedin"
+                               pattern="https:\/\/www\.linkedin\.com\/.*" placeholder="https://www.linkedin.com/">
+                    </div>
+                    <div class="mb-3">
+                        <label for="github" class="form-label">GitHub</label>
+                        <input type="text" class="form-control" id="github" name="github"
+                               pattern="https:\/\/github\.com\/.*" placeholder="https://github.com/">
                     </div>
                     <div class="mb-3">
                         <label for="phone" class="form-label">Телефон</label>
-                        <input type="text" class="form-control" id="phone" name="phone" required>
+                        <input type="text" class="form-control" id="phone" name="phone" required pattern="^\+380\d{9}$"
+                               placeholder="в форматі +380921112233">
                     </div>
                     <div class="mb-3">
                         <label for="about" class="form-label">Напишіть кілька слів про себе</label>
@@ -110,13 +131,14 @@
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label for="profile_image" class="form-label">Додайте фото</label>
-                        <input type="file" class="form-control" id="profile_image" name="profile_image">
+                        <label for="profile_image" class="form-label">Додайте фото (jpg або png)</label>
+                        <input type="file" class="form-control" id="profile_image" name="profile_image"
+                               accept=".jpg, .jpeg, .png">
                     </div>
 
                     <div class="mb-3">
-                        <label for="cv" class="form-label">Додайте резюме</label>
-                        <input type="file" class="form-control" id="cv" name="cv">
+                        <label for="cv" class="form-label">Додайте резюме в форматі PDF</label>
+                        <input type="file" class="form-control" id="cv" name="cv" accept=".pdf">
                     </div>
 
                     <button type="submit" class="btn btn-primary" value="Register as Candidate">Зареєструватися
@@ -129,10 +151,6 @@
         </div>
     </div>
 </div>
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#Team">
-    Я шукаю кандидатів
-</button>
-
 <div class="modal fade" id="Team">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -152,7 +170,8 @@
                     {% endif %}
                     <div class="mb-3">
                         <label for="team_email" class="form-label">Введіть електронну пошту</label>
-                        <input type="text" class="form-control" id="team_email" name="team_email" required>
+                        <input type="text" class="form-control" id="team_email" name="team_email" required
+                               pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$">>
                     </div>
                     <div class="mb-3">
                         <label for="team_password" class="form-label">Вигадайте пароль</label>
@@ -171,30 +190,35 @@
                     </div>
                     <div class="mb-3">
                         <label for="team_website" class="form-label">Сайт компанії</label>
-                        <input type="text" class="form-control" id="team_website" name="team_website" required>
+                        <input type="text" class="form-control" id="team_website" name="team_website">
                     </div>
                     <div class="mb-3">
                         <label for="team_telegram" class="form-label">Telegram</label>
-                        <input type="text" class="form-control" id="team_telegram" name="team_telegram" required>
+                        <input type="text" class="form-control" id="team_telegram" name="team_telegram">
                     </div>
                     <div class="mb-3">
                         <label for="team_facebook" class="form-label">Facebook</label>
-                        <input type="text" class="form-control" id="team_facebook" name="team_facebook">
+                        <input type="text" class="form-control" id="team_facebook" name="team_facebook"
+                               pattern="https:\/\/www\.facebook\.com\/.*" placeholder="https://www.facebook.com/">
                     </div>
                     <div class="mb-3">
                         <label for="team_instagram" class="form-label">Instagram</label>
-                        <input type="text" class="form-control" id="team_instagram" name="team_instagram">
+                        <input type="text" class="form-control" id="team_instagram" name="team_instagram"
+                               pattern="https:\/\/www\.instagram\.com\/.*" placeholder="https://www.instagram.com/">
                     </div>
                     <div class="mb-3">
                         <label for="team_linkedin" class="form-label">LinkedIn</label>
-                        <input type="text" class="form-control" id="team_linkedin" name="team_linkedin" required>
+                        <input type="text" class="form-control" id="team_linkedin" name="team_linkedin"
+                               pattern="https:\/\/www\.linkedin\.com\/.*" placeholder="https://www.linkedin.com/">
                     </div>
                     <div class="mb-3">
                         <label for="team_phone" class="form-label">Телефон</label>
-                        <input type="text" class="form-control" id="team_phone" name="team_phone" required>
+                        <input type="text" class="form-control" id="team_phone" name="team_phone"
+                               pattern="^\+380\d{9}$"
+                               placeholder="в форматі +380921112233">
                     </div>
                     <div class="mb-3">
-                        <label for="team_about" class="form-label">Напишіть кілька слів про себе</label>
+                        <label for="team_about" class="form-label">Напишіть кілька слів про команду</label>
                         <textarea class="form-control" id="team_about" name="team_about" rows="5"></textarea>
                     </div>
 
@@ -210,7 +234,8 @@
                     </div>
                     <div class="mb-3">
                         <label for="team_profile_image" class="form-label">Додайте лого компанії</label>
-                        <input type="file" class="form-control" id="team_profile_image" name="team_profile_image">
+                        <input type="file" class="form-control" id="team_profile_image" name="team_profile_image"
+                               accept=".jpg, .jpeg, .png">
                     </div>
 
                     <button type="submit" class="btn btn-primary" value="Register as Team">Зареєструватися
@@ -223,4 +248,5 @@
         </div>
     </div>
 </div>
+
 {% endblock %}
