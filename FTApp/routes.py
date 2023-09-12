@@ -98,7 +98,7 @@ def registration():
                     db.session.add(new_user)
                     db.session.commit()
 
-                    return redirect(url_for('core.main'))
+                    return redirect(url_for('core.candidate_profile', candidate_id=new_user.id))
 
                 except UploadNotAllowed:
                     flash('Invalid file type. Upload images or PDFs only.', 'danger')
@@ -133,7 +133,7 @@ def registration():
                     )
                     db.session.add(new_team)
                     db.session.commit()
-                    return redirect(url_for('core.main'))
+                    return redirect(url_for('core.team_profile', team_id=new_team.id))
                 except UploadNotAllowed:
                     flash('Invalid file type. Upload images or PDFs only.', 'danger')
     return render_template('registration.html', title='Registration', candidate_form=candidate_form,

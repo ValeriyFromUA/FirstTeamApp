@@ -1,5 +1,79 @@
 {% extends 'base.html' %}
 {% block title %} {{title}}{% endblock %}
 {% block content %}
-{{candidate.first_name}}
+
+<!-- Перший контейнер -->
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <h1>{{candidate.first_name}} {{candidate.last_name}}</h1>
+
+
+            <h6>місто: {{candidate.city.name}}</h6>
+            <h6>Працює з {{candidate.specialisation.name}} ({{candidate.experience.name}})</h6>
+            <h6>Рівень володіння англійською {{candidate.english.level}}</h6>
+            <p>{{ candidate.about }}</p>
+
+            <!-- Вміст першого контейнера -->
+        </div>
+        <div class="col-md-6 ">
+            <img src="/static/candidate_pic/{{candidate.profile_image}}" height="200px" alt="none">
+            <div>
+                {% if candidate.github %}
+                <br><a href="{{ candidate.github }}" target="_blank">GitHub</a>
+                {% endif %}
+
+                {% if candidate.linkedin %}
+                <br><a href="{{ candidate.linkedin }}" target="_blank">LinkedIn</a>
+                {% endif %}
+
+                {% if candidate.telegram %}
+                <br><a href="{{ candidate.telegram }}" target="_blank">Telegram</a>
+                {% endif %}
+
+                {% if candidate.facebook %}
+                <br><a href="{{ candidate.facebook }}" target="_blank">Facebook</a>
+                {% endif %}
+
+                {% if candidate.instagram %}
+                <br><a href="{{ candidate.instagram }}" target="_blank">Instagram</a>
+                {% endif %}
+
+                {% if candidate.phone %}
+                <br>
+                <text>тел. {{ candidate.phone }}</text>
+                {% endif %}
+
+                {% if candidate.email %}
+                <br>
+                <text>email: {{ candidate.email }}</text>
+                {% endif %}
+            </div>
+
+            <!-- Вміст другого контейнера -->
+        </div>
+    </div>
+</div>
+
+<!-- Третій контейнер -->
+<div class="container mx-auto">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="container">
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#CV">
+                    Тут заховано резюме...
+                </button>
+            </div>
+            <div class="modal fade" id="CV">
+                <div class="modal-dialog modal-xl">
+                    <div class="modal-content">
+                        <iframe src="/static/cv/{{candidate.cv}}" width="100%" height="1200"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 {% endblock %}

@@ -1,5 +1,61 @@
 {% extends 'base.html' %}
 {% block title %} {{title}}{% endblock %}
 {% block content %}
-{{team.company}}
+
+<!-- Перший контейнер -->
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <h1>{{team.company}}</h1>
+
+
+            <h6>місто: {{team.city.name}}</h6>
+            <p>{{ team.about }}</p>
+
+            <!-- Вміст першого контейнера -->
+        </div>
+        <div class="col-md-6 ">
+            <img src="/static/team_logo/{{team.profile_image}}" height="200px" alt="none">
+            <div>
+                {% if team.website %}
+                <br><a href="{{ team.website }}" target="_blank">Сайт компанії</a>
+                {% endif %}
+
+                {% if team.linkedin %}
+                <br><a href="{{ team.linkedin }}" target="_blank">LinkedIn</a>
+                {% endif %}
+
+                {% if team.telegram %}
+                <br><a href="{{ team.telegram }}" target="_blank">Telegram</a>
+                {% endif %}
+
+                {% if team.facebook %}
+                <br><a href="{{ team.facebook }}" target="_blank">Facebook</a>
+                {% endif %}
+
+                {% if team.instagram %}
+                <br><a href="{{ team.instagram }}" target="_blank">Instagram</a>
+                {% endif %}
+
+                {% if team.phone %}
+                <br>
+                <p>тел. {{ team.phone }}</p>
+                {% endif %}
+            </div>
+
+            <!-- Вміст другого контейнера -->
+        </div>
+    </div>
+</div>
+
+<!-- Третій контейнер -->
+<div class="container mx-auto">
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Треба буде додати сюди вакансії компанії</h1>
+        </div>
+    </div>
+</div>
+
+
 {% endblock %}
