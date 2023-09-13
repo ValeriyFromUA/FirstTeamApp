@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% block title %} {{title}}{% endblock %}
 {% block content %}
+{% if not current_user.is_authenticated %}
 <div class="container d-flex justify-content-center">
     <h1>Що шукаємо?</h1>
 </div>
@@ -88,6 +89,13 @@
                     <div class="mb-3">
                         <label for="about" class="form-label">Напишіть кілька слів про себе</label>
                         <textarea class="form-control" id="about" name="about" rows="5"></textarea>
+                    </div>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="show_me" name="show_me">
+                        <label class="form-check-label" for="show_me">Відображати мої контактні дані для всіх
+                            користувачів (профілі з відкритими даними доступні в каталозі, таким чином команди
+                            самостійно зможуть пропонувати Вам роботу, не чекаючи на Ваш відгук)</label>
                     </div>
 
 
@@ -248,5 +256,16 @@
         </div>
     </div>
 </div>
+{% endif %}
+{% if current_user.is_authenticated %}
+<div class="container d-flex justify-content-center">
+    {% if current_user.user_type == 'candidate' %}
+    <h3> {{ current_user.first_name }}, Ви уже авторизовані як Кандидат</h3>
+    {% endif %}
+    {% if current_user.user_type == 'team' %}
+    <h3>Ви уже авторизовані як представник {{ current_user.company }}</h3>
+    {% endif %}
 
+</div>
+{% endif %}
 {% endblock %}

@@ -1,14 +1,11 @@
 {% extends 'base.html' %}
 {% block title %} {{title}}{% endblock %}
 {% block content %}
+{% if not current_user.is_authenticated %}
 <div class="container d-flex justify-content-center">
-
     <h1>Тут можна авторизуватися</h1>
-
-    {% if current_user.is_authenticated %}
-    <h1> Hi {{ current_user.email }}!</h1>
-    {% endif %}
 </div>
+
 
 <div class="container d-flex justify-content-center">
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#Candidate">
@@ -93,5 +90,16 @@
         </div>
     </div>
 </div>
+{% endif %}
+{% if current_user.is_authenticated %}
+<div class="container d-flex justify-content-center">
+    {% if current_user.user_type == 'candidate' %}
+    <h3> {{ current_user.first_name }}, Ви уже авторизовані як Кандидат</h3>
+    {% endif %}
+    {% if current_user.user_type == 'team' %}
+    <h3>Ви уже авторизовані як представник {{ current_user.company }}</h3>
+    {% endif %}
 
+</div>
+{% endif %}
 {% endblock %}

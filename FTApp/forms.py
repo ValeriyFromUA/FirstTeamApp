@@ -18,6 +18,7 @@ class CandidateRegistrationForm(FlaskForm):
     github = StringField('GitHub')
     phone = StringField('Phone')
     about = TextAreaField('About')
+    show_me = BooleanField('Show me')
     profile_image = FileField('Profile Image URL')
     cv = FileField('CV URL')
     city = SelectField('City', validators=[DataRequired()], coerce=int)
@@ -94,6 +95,7 @@ class CandidateEditForm(FlaskForm):
     github = StringField('GitHub')
     phone = StringField('Phone')
     about = TextAreaField('About')
+    show_me = BooleanField('Show me')
     profile_image = FileField('Profile Image URL')
     cv = FileField('CV URL')
 
@@ -110,3 +112,24 @@ class TeamLoginForm(FlaskForm):
     team_email = StringField('Email', validators=[DataRequired(), Email()])
     team_password = PasswordField('Password', validators=[DataRequired()])
     submit = SubmitField('Enter as Team')
+
+
+class OpportunityForm(FlaskForm):
+    op_title = StringField('Title')
+    op_description = StringField('Title')
+    op_salary = StringField('Title')
+    op_city = SelectField('City', validators=[DataRequired()], coerce=int)
+    op_english = SelectField('English Level', validators=[DataRequired()], coerce=int)
+    op_specialisation = SelectField('Specialisation', validators=[DataRequired()], coerce=int)
+    op_experience = SelectField('Experience', validators=[DataRequired()], coerce=int)
+
+    submit = SubmitField('Register as Candidate')
+
+    def __init__(self, *args, **kwargs):
+        super(OpportunityForm, self).__init__(*args, **kwargs)
+
+        self.op_city.choices = [(city.id, city.name) for city in City.query.all()]
+        self.op_english.choices = [(english.id, english.level) for english in English.query.all()]
+        self.op_specialisation.choices = [(specialisation.id, specialisation.name) for specialisation in
+                                          Specialisation.query.all()]
+        self.op_experience.choices = [(experience.id, experience.name) for experience in Experience.query.all()]

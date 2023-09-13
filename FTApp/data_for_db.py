@@ -3,6 +3,7 @@ from FTApp.models import City, English, Experience, Specialisation
 from FTApp.run import app
 
 CITY_LIST = [
+    'Віддалена робота',
     'Вінниця',
     'Дніпро',
     'Донецьк',
@@ -27,7 +28,8 @@ CITY_LIST = [
     'Хмельницький',
     'Черкаси',
     'Чернівці',
-    'Чернігів'
+    'Чернігів',
+
 ]
 
 LANG_LEVELS = [
@@ -67,8 +69,6 @@ SPECIALISATIONS = [
     'Scala',
     'Lua',
     'Bash (Shell)',
-    'HTML',
-    'CSS',
     'Objective-C',
     'Haskell',
     'Groovy',

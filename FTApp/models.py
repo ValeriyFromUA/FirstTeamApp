@@ -71,7 +71,7 @@ class Candidate(db.Model, UserMixin):
     linkedin = db.Column(db.String(300), nullable=True)
     github = db.Column(db.String(300), nullable=True)
     user_type = db.Column(db.String(300), nullable=True, default='candidate')
-
+    show_me = db.Column(db.Boolean, nullable=False, default=False)
     phone = db.Column(db.String(20), nullable=True)
     about = db.Column(db.String(5000), nullable=True)
     profile_image = db.Column(db.String(300))
@@ -95,7 +95,7 @@ class Candidate(db.Model, UserMixin):
 
     def __init__(self, email, password, first_name, last_name, user_type, city=None, github=None, telegram=None,
                  facebook=None, instagram=None, linkedin=None, phone=None, about=None,
-                 profile_image=None, cv=None, english=None, specialisation=None, experience=None):
+                 profile_image=None, cv=None, english=None, specialisation=None, experience=None, show_me=False):
         self.email = email
         self.password = password
         self.is_staff = False
@@ -116,6 +116,7 @@ class Candidate(db.Model, UserMixin):
         self.specialisation = specialisation
         self.experience = experience
         self.user_type = user_type
+        self.show_me = show_me
 
 
 class Team(db.Model, UserMixin):
@@ -175,17 +176,25 @@ class Opportunity(db.Model):
     english_id = db.Column(db.Integer, db.ForeignKey('english.id'))
     english = db.relationship('English', backref='opportunities')
 
+    city_id = db.Column(db.Integer, db.ForeignKey('cities.id'))
+    city = db.relationship('City', backref='opportunities')
+
+    team_id = db.Column(db.Integer, db.ForeignKey('teams.id'))
+    team = db.relationship('Team', backref='opportunities')
+
     description = db.Column(db.String(5000))
     salary = db.Column(db.Integer)
     creation_date = db.Column(db.DateTime, default=db.func.now())
 
-    def __init__(self, title, specialisation, experience, english, description, salary):
+    def __init__(self, title, specialisation, experience, english, description, salary, city, team):
         self.title = title
         self.specialisation = specialisation
         self.experience = experience
         self.english = english
         self.description = description
         self.salary = salary
+        self.city = city
+        self.team = team
 
 
 class Response(db.Model):
@@ -198,6 +207,9 @@ class Response(db.Model):
 
     candidate_id = db.Column(db.Integer, db.ForeignKey('candidates.id'))
     candidate = db.relationship('Candidate', backref='responses')
+
+    team_id = db.Column(db.Integer, db.ForeignKey('teams.id'))
+    team = db.relationship('Team', backref='responses')
 
     creation_date = db.Column(db.DateTime, default=db.func.now())
     user_read = db.Column(db.Boolean, nullable=False, default=False)
