@@ -82,3 +82,31 @@ class TeamRegistrationForm(FlaskForm):
         user = Candidate.query.filter_by(phone=team_company.data).first()
         if user is not None:
             raise ValidationError('Company exists, please pick another one')
+
+
+class CandidateEditForm(FlaskForm):
+    first_name = StringField('First Name', validators=[DataRequired()])
+    last_name = StringField('Last Name', validators=[DataRequired()])
+    telegram = StringField('Telegram')
+    facebook = StringField('Facebook')
+    instagram = StringField('Instagram')
+    linkedin = StringField('LinkedIn')
+    github = StringField('GitHub')
+    phone = StringField('Phone')
+    about = TextAreaField('About')
+    profile_image = FileField('Profile Image URL')
+    cv = FileField('CV URL')
+
+    submit = SubmitField('Edit Candidate')
+
+
+class CandidateLoginForm(FlaskForm):
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    submit = SubmitField('Enter as Candidate')
+
+
+class TeamLoginForm(FlaskForm):
+    team_email = StringField('Email', validators=[DataRequired(), Email()])
+    team_password = PasswordField('Password', validators=[DataRequired()])
+    submit = SubmitField('Enter as Team')

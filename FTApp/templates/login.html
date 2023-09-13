@@ -1,5 +1,97 @@
 {% extends 'base.html' %}
 {% block title %} {{title}}{% endblock %}
 {% block content %}
+<div class="container d-flex justify-content-center">
+
+    <h1>Тут можна авторизуватися</h1>
+
+    {% if current_user.is_authenticated %}
+    <h1> Hi {{ current_user.email }}!</h1>
+    {% endif %}
+</div>
+
+<div class="container d-flex justify-content-center">
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#Candidate">
+        Я кандидат
+    </button>
+    <div class="mx-2"></div>
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#Team">
+        Я представник команди
+    </button>
+</div>
+
+
+<div class="modal fade" id="Candidate">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- Заголовок модального вікна -->
+            <div class="modal-header">
+                <h4 class="modal-title">Авторизуйтесь я Кандидат</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <!-- Тіло модального вікна з формою -->
+            <div class="modal-body">
+                <form method="POST" enctype="multipart/form-data" action="">
+                    {{ candidate_login_form.hidden_tag() }}
+                    {% if candidate_login_form.errors %}
+                    {{ candidate_login_form.errors }}
+                    {% endif %}
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Введіть електронну пошту</label>
+                        <input type="email" class="form-control" id="email" name="email" required
+                               pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$">
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Введіть пароль</label>
+                        <input type="password" class="form-control" id="password" name="password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary" value="Enter as Candidate">Увійти
+                    </button>
+                </form>
+            </div>
+
+            <!-- Нижня частина модального вікна з кнопкою закриття -->
+
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="Team">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- Заголовок модального вікна -->
+            <div class="modal-header">
+                <h4 class="modal-title">Авторизуйтесь я представник Команди</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <!-- Тіло модального вікна з формою -->
+            <div class="modal-body">
+                <form method="POST" enctype="multipart/form-data" action="">
+                    {{ team_login_form.hidden_tag() }}
+                    {% if team_login_form.errors %}
+                    {{ team_login_form.errors }}
+                    {% endif %}
+                    <div class="mb-3">
+                        <label for="team_email" class="form-label">Введіть електронну пошту</label>
+                        <input type="text" class="form-control" id="team_email" name="team_email" required
+                               pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$">
+                    </div>
+                    <div class="mb-3">
+                        <label for="team_password" class="form-label">Введіть пароль</label>
+                        <input type="password" class="form-control" id="team_password" name="team_password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary" value="Enter as Team">Увійти
+                    </button>
+                </form>
+            </div>
+
+            <!-- Нижня частина модального вікна з кнопкою закриття -->
+
+        </div>
+    </div>
+</div>
 
 {% endblock %}

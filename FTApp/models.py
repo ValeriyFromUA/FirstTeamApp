@@ -44,13 +44,15 @@ class Administrator(db.Model, UserMixin):
     confirmed = db.Column(db.Boolean, nullable=False, default=False)
     creation_date = db.Column(db.DateTime, default=db.func.now())
     username = db.Column(db.String(128), nullable=False, unique=True)
+    user_type = db.Column(db.String(300), nullable=True, default='admin')
 
-    def __init__(self, email, password, username):
+    def __init__(self, email, password, username, user_type):
         self.email = email
         self.password = password
         self.is_staff = True
         self.confirmed = True
         self.username = username
+        self.user_type = user_type
 
 
 class Candidate(db.Model, UserMixin):
@@ -68,6 +70,7 @@ class Candidate(db.Model, UserMixin):
     instagram = db.Column(db.String(300), nullable=True)
     linkedin = db.Column(db.String(300), nullable=True)
     github = db.Column(db.String(300), nullable=True)
+    user_type = db.Column(db.String(300), nullable=True, default='candidate')
 
     phone = db.Column(db.String(20), nullable=True)
     about = db.Column(db.String(5000), nullable=True)
@@ -90,7 +93,7 @@ class Candidate(db.Model, UserMixin):
     # responses = db.relationship('Response', backref='candidate',
     #                             primaryjoin='Candidate.id == Response.candidate_id')
 
-    def __init__(self, email, password, first_name, last_name, city=None, github=None, telegram=None,
+    def __init__(self, email, password, first_name, last_name, user_type, city=None, github=None, telegram=None,
                  facebook=None, instagram=None, linkedin=None, phone=None, about=None,
                  profile_image=None, cv=None, english=None, specialisation=None, experience=None):
         self.email = email
@@ -112,6 +115,7 @@ class Candidate(db.Model, UserMixin):
         self.english = english
         self.specialisation = specialisation
         self.experience = experience
+        self.user_type = user_type
 
 
 class Team(db.Model, UserMixin):
@@ -130,12 +134,13 @@ class Team(db.Model, UserMixin):
     linkedin = db.Column(db.String(300), nullable=True)
     phone = db.Column(db.String(20), nullable=True)
     about = db.Column(db.String(5000), nullable=True)
+    user_type = db.Column(db.String(5000), nullable=True, default='team')
     profile_image = db.Column(db.String(300))
 
     city_id = db.Column(db.Integer, db.ForeignKey('cities.id'))
     city = db.relationship('City', backref='extended_users')
 
-    def __init__(self, email, password, company, website, city=None, telegram=None,
+    def __init__(self, email, password, company, user_type, website, city=None, telegram=None,
                  facebook=None, instagram=None, linkedin=None, phone=None, about=None,
                  profile_image=None):
         self.email = email
@@ -152,17 +157,7 @@ class Team(db.Model, UserMixin):
         self.about = about
         self.profile_image = profile_image
         self.city = city
-
-
-@login_manager.user_loader
-def load_user(user_id, user_type):
-    if user_type == 'Candidate':
-        return Candidate.query.get(user_id)
-    elif user_type == 'Team':
-        return Team.query.get(user_id)
-    elif user_type == 'Administrator':
-        return Administrator.query.get(user_id)
-    return None
+        self.user_type = user_type
 
 
 class Opportunity(db.Model):
