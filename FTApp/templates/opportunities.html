@@ -1,162 +1,18 @@
 {% extends 'base.html' %}
 {% block title %} {{title}}{% endblock %}
 {% block content %}
-
-<div class="container">
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#NEW_OPP">
-        Створити нову вакансію
-    </button>
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#filterModal">
-        Відкрити фільтри
-    </button>
-</div>
 {% for opportunity in  opportunities %}
-{{ opportunity.id }}{{ opportunity.title }}
+{% if opportunity.visible == True %}
+<div class="alert alert-dark d-flex justify-content-between"
+     role="alert">
+    <a href="{{ url_for('core.opportunity', opp_id=opportunity.id) }}" class="d-flex align-items-center">
+        <h5 class="text-dark d-inline">{{ opportunity.title }}</h5>
+        <h6 class="text-dark d-inline ml-2">({{ opportunity.city.name }}, {{ opportunity.salary }} $)</h6>
+    </a>
+    <p class="mb-0">{{ opportunity.creation_date.strftime('%d-%m-%Y %H:%M') }}</p>
+</div>
+{% endif %}
+
 {% endfor %}
-
-<div class="modal fade" id="filterModal" tabindex="-1" role="dialog" aria-labelledby="filterModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="filterModalLabel">Фільтри</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form method="GET" action="{{ url_for('core.opportunities') }}">
-                    <div class="form-group">
-                        <label for="op_city">Місто в якому прпонуєте роботу:</label>
-                        <select class="form-control" id="city" name="city">
-                            <option value="" disabled selected></option>
-                            {% for city_id, city_name in cities %}
-                            <option value="{{ city_id }}">{{ city_name }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="english">Рівень володіння Англійською мовою, який Ви очікуєте від
-                            Кандидата:</label>
-                        <select class="form-control" id="english" name="english">
-                            <option value="" disabled selected></option>
-                            {% for english_id, english_level in english_levels %}
-                            <option value="{{ english_id }}">{{ english_level }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="specialisation">Оберіть мову програмування або спеціалізацію, якою має володіти
-                            Кандидат:</label>
-                        <select class="form-control" id="specialisation" name="specialisation">
-                            <option value="" disabled selected></option>
-                            {% for specialisation_id, specialisation_name in specialisations %}
-                            <option value="{{ specialisation_id }}">{{ specialisation_name }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="experience">Бажаний досвід кандидата в розробці:</label>
-                        <select class="form-control" id="experience" name="experience">
-                            <option value="" disabled selected></option>
-                            {% for experience_id, experience_name in experiences %}
-                            <option value="{{ experience_id }}">{{ experience_name }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-
-                    <button type="submit" class="btn btn-primary">Застосувати фільтри</button>
-                    <a href="{{ url_for('core.opportunities') }}" class="btn btn-secondary">Скинути фільтри</a>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="modal fade" id="NEW_OPP">
-    <div class="modal-dialog">
-        <div class="modal-content">
-
-            <!-- Заголовок модального вікна -->
-            <div class="modal-header">
-                <h4 class="modal-title">Форма кандидата</h4>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-            </div>
-
-            <!-- Тіло модального вікна з формою -->
-            <div class="modal-body">
-                <form method="POST" enctype="multipart/form-data" action="">
-                    {{ opportunity_form.hidden_tag() }}
-                    {% if opportunity_form.errors %}
-                    {{ opportunity_form.errors }}
-                    {% endif %}
-                    <div class="mb-3">
-                        <label for="op_title" class="form-label">Заголовок вакансії</label>
-                        <input type="text" class="form-control" id="op_title" name="op_title" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="op_description" class="form-label">Напишіть кілька слів про вакансію</label>
-                        <textarea class="form-control" id="op_description" name="op_description" rows="5"
-                                  required></textarea>
-                    </div>
-                    <div class="mb-3">
-                        <label for="op_salary" class="form-label">Зарплата в $</label>
-                        <input type="number" class="form-control" id="op_salary" name="op_salary" min="1" max="100000"
-                               required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="op_city">Місто в якому прпонуєте роботу:</label>
-                        <select class="form-control" id="op_city" name="op_city" required>
-                            <option value="" disabled selected></option>
-                            {% for city_id, city_name in cities %}
-                            <option value="{{ city_id }}">{{ city_name }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="op_english">Рівень володіння Англійською мовою, який Ви очікуєте від
-                            Кандидата:</label>
-                        <select class="form-control" id="op_english" name="op_english" required>
-                            <option value="" disabled selected></option>
-                            {% for english_id, english_level in english_levels %}
-                            <option value="{{ english_id }}">{{ english_level }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="specialisation">Оберіть мову програмування або спеціалізацію, якою має володіти
-                            Кандидат:</label>
-                        <select class="form-control" id="op_specialisation" name="op_specialisation" required>
-                            <option value="" disabled selected></option>
-                            {% for specialisation_id, specialisation_name in specialisations %}
-                            <option value="{{ specialisation_id }}">{{ specialisation_name }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="op_experience">Бажаний досвід кандидата в розробці:</label>
-                        <select class="form-control" id="op_experience" name="op_experience" required>
-                            <option value="" disabled selected></option>
-                            {% for experience_id, experience_name in experiences %}
-                            <option value="{{ experience_id }}">{{ experience_name }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <button type="submit" class="btn btn-primary" value="Register as Candidate">Створити вакансію
-                    </button>
-                </form>
-            </div>
-
-            <!-- Нижня частина модального вікна з кнопкою закриття -->
-
-        </div>
-    </div>
-</div>
 
 {% endblock %}

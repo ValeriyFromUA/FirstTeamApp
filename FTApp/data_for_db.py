@@ -1,7 +1,10 @@
+from FTApp.logger import get_logger
+from FTApp.run import app
 from FTApp import db
 from FTApp.models import City, English, Experience, Specialisation
-from FTApp.run import app
+from faker import Faker
 
+fake = Faker('uk_UA')
 CITY_LIST = [
     'Віддалена робота',
     'Вінниця',
@@ -11,7 +14,7 @@ CITY_LIST = [
     'Запоріжжя',
     'Івано-Франківськ',
     'Київ',
-    'Кропивницький',
+    'Кіровоград',
     'Луганськ',
     'Луцьк',
     'Львів',
@@ -33,19 +36,17 @@ CITY_LIST = [
 ]
 
 LANG_LEVELS = [
-    'Beginner (A1)',
-    'Elementary (A2)',
-    'Pre-Intermediate (B1)',
-    'Intermediate (B2)',
-    'Upper-Intermediate (C1)',
-    'Advanced (C2)',
-    'Fluent (C2)',
-    'Native Speaker'
+    'No English',
+    'Beginner/Elementary',
+    'Pre-Intermediate',
+    'Intermediate',
+    'Upper-Intermediate',
+    'Advanced/Fluent',
 ]
 
 EXP_LEVEL = [
     'Без досвіду',
-    'Менше 1 року',
+    'Менше року',
     '1 рік',
 ]
 
@@ -68,7 +69,6 @@ SPECIALISATIONS = [
     'R',
     'Scala',
     'Lua',
-    'Bash (Shell)',
     'Objective-C',
     'Haskell',
     'Groovy',
@@ -113,7 +113,7 @@ def add_data_to_database():
         experience_level = Experience(name=exp_name)
         db.session.add(experience_level)
 
-    for spec_name in SPECIALISATIONS:
+    for spec_name in list(sorted(SPECIALISATIONS)):
         specialisation = Specialisation(name=spec_name)
         db.session.add(specialisation)
 

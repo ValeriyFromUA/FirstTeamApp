@@ -1,10 +1,12 @@
 import os
 from datetime import datetime
 from functools import wraps
+from operator import and_
 
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session
 from flask_login import current_user, login_user, logout_user, login_required
 from flask_uploads import UploadSet, configure_uploads, IMAGES, DOCUMENTS, UploadNotAllowed
+from sqlalchemy import desc
 from werkzeug.utils import secure_filename
 
 from FTApp import db, bcrypt, login_manager
@@ -12,7 +14,7 @@ from FTApp.constants import CANDIDATE_PIC_DIR, CV_DIR, TEAM_LOGO_DIR, FILENAME_P
 from FTApp.forms import CandidateRegistrationForm, TeamRegistrationForm, CandidateEditForm, CandidateLoginForm, \
     TeamLoginForm, OpportunityForm
 from FTApp.models import Candidate, Team, Opportunity, City, English, Experience, Specialisation, Administrator
-from FTApp.security import team_required
+from FTApp.security import team_required, auth_required, candidate_required
 
 core = Blueprint('core', __name__)
 
@@ -20,7 +22,7 @@ core = Blueprint('core', __name__)
 @login_manager.user_loader
 def load_user(user_id):
     user = None
-    user_type = session.get('user_type', None)  # Отримуємо user_type з сесії
+    user_type = session.get('user_type', None)
 
     if user_type == 'candidate':
         user = Candidate.query.get(int(user_id))
@@ -32,10 +34,6 @@ def load_user(user_id):
     return user
 
 
-# @login_manager.user_loader
-# def load_admin_user(admin_id):
-#     return Admin.query.get(int(admin_id))
-
 @core.route('/')
 @core.route('/main')
 def main():
@@ -43,6 +41,7 @@ def main():
 
 
 @core.route('/logout')
+@auth_required
 def logout():
     logout_user()
     flash('You have logged out now.', category='info')
@@ -69,7 +68,6 @@ def login():
                 flash('Невірна електронна пошта або пароль', 'danger')
 
         if team_login_form.validate_on_submit():
-            # Обробіть вхід для команди, аналогічно кандидату
             email = team_login_form.team_email.data
             password = team_login_form.team_password.data
 
@@ -147,7 +145,6 @@ def registration():
                         github=candidate_form.github.data,
                         phone=candidate_form.phone.data,
                         about=candidate_form.about.data,
-                        show_me=candidate_form.show_me.data,
                         profile_image=profile_image_filename,
                         user_type='candidate',
                         city=selected_city,
@@ -214,127 +211,136 @@ def registration():
 @core.route('/candidates')
 @team_required
 def candidates():
-    all_candidates = Candidate.query.filter_by(show_me=True).all()
-    return render_template('candidates.html', title='Всі кандидати', candidates=all_candidates)
+    team_opportunities = Opportunity.query.filter_by(team_id=current_user.id).all()
+
+    matching_candidates = Candidate.query.filter(
+        Candidate.specialisation_id.in_([opp.specialisation_id for opp in team_opportunities]),
+        Candidate.city_id.in_([opp.city_id for opp in team_opportunities])
+    ).all()
+    return render_template('candidates.html', title='Всі кандидати', candidates=matching_candidates)
 
 
 @core.route('/candidates/<int:candidate_id>', methods=('GET', 'POST'))
+@auth_required
 def candidate_profile(candidate_id):
     candidate = Candidate.query.get(candidate_id)
     if not candidate:
         return render_template('404.html', title='Not found')
-
-    # if current_user.is_authenticated and current_user.id == candidate.id:
     candidate_form = CandidateEditForm(obj=candidate)
-    if request.method == 'POST':
-        profile_image = candidate_form.profile_image.data
-        cv = candidate_form.cv.data
-        if profile_image:
-            profile_image_filename = f'{FILENAME_PREFIX}_{secure_filename(profile_image.filename)}'
-            full_pic_path = os.path.join(CANDIDATE_PIC_DIR, profile_image_filename)
-            profile_image.save(full_pic_path)
-        else:
-            profile_image_filename = None
+    if current_user.user_type == 'candidate' and current_user.id == candidate_id:
 
-        if cv:
-            cv_filename = f'{FILENAME_PREFIX}_{secure_filename(cv.filename)}'
-            full_cv_path = os.path.join(CV_DIR, cv_filename)
-            cv.save(full_cv_path)
-        else:
-            cv_filename = None
-        candidate.first_name = request.form['first_name']
-        candidate.last_name = request.form['last_name']
-        candidate.telegram = request.form['telegram']
-        candidate.facebook = request.form['facebook']
-        candidate.instagram = request.form['instagram']
-        candidate.linkedin = request.form['linkedin']
-        candidate.github = request.form['github']
-        candidate.about = request.form['about']
-        candidate.profile_image = (
-            profile_image_filename if profile_image else candidate.profile_image)
-        candidate.cv = cv_filename if cv else candidate.cv
-        db.session.commit()
-        flash('Профіль оновлено', 'success')
-        return redirect(url_for('core.candidate_profile', candidate_id=candidate.id))
+        if request.method == 'POST':
+            profile_image = candidate_form.profile_image.data
+            cv = candidate_form.cv.data
+            if profile_image:
+                profile_image_filename = f'{FILENAME_PREFIX}_{secure_filename(profile_image.filename)}'
+                full_pic_path = os.path.join(CANDIDATE_PIC_DIR, profile_image_filename)
+                profile_image.save(full_pic_path)
+            else:
+                profile_image_filename = None
+
+            if cv:
+                cv_filename = f'{FILENAME_PREFIX}_{secure_filename(cv.filename)}'
+                full_cv_path = os.path.join(CV_DIR, cv_filename)
+                cv.save(full_cv_path)
+            else:
+                cv_filename = None
+
+            candidate.first_name = request.form['first_name']
+            candidate.last_name = request.form['last_name']
+            candidate.telegram = request.form['telegram']
+            candidate.facebook = request.form['facebook']
+            candidate.instagram = request.form['instagram']
+            candidate.linkedin = request.form['linkedin']
+            candidate.github = request.form['github']
+            candidate.about = request.form['about']
+            candidate.profile_image = (
+                profile_image_filename if profile_image else candidate.profile_image)
+            candidate.cv = cv_filename if cv else candidate.cv
+            db.session.commit()
+            flash('Профіль оновлено', 'success')
+            return redirect(url_for('core.candidate_profile', candidate_id=candidate.id))
     return render_template('candidate_profile.html', title='Profile', candidate=candidate,
                            candidate_form=candidate_form)
-    # else:
-    #     return render_template('403.html', title='Access Denied')
 
 
 @core.route('/teams/<int:team_id>', methods=('GET', 'POST'))
+@auth_required
 def team_profile(team_id):
-    team = Team.query.get(team_id)
-    # is_owner = current_user.is_authenticated and current_user.id == team.id if team else False
-    if team:
-        return render_template('team_profile.html', title=team.company, team=team)
-    return render_template('404.html', title='Not found')
+    my_opportunities = Opportunity.query.filter_by(team_id=team_id).order_by(desc(Opportunity.id)).all()
+    if current_user.user_type == 'candidate':
+        my_opportunities = [opportunity for opportunity in my_opportunities if opportunity.visible]
 
-
-@core.route('/opportunities', methods=('GET', 'POST'))
-def opportunities():
     cities = [(city.id, city.name) for city in City.query.all()]
     english_levels = [(english.id, english.level) for english in English.query.all()]
     specialisations = [(specialisation.id, specialisation.name) for specialisation in
                        Specialisation.query.all()]
     experiences = [(experience.id, experience.name) for experience in Experience.query.all()]
     opportunity_form = OpportunityForm()
-    all_opportunities = Opportunity.query.all()
+    team = Team.query.get(team_id)
+    if current_user.user_type == 'team' and current_user.id == team.id:
+        if request.method == 'POST':
+            if opportunity_form.validate_on_submit():
+                selected_city_id = opportunity_form.city.data
+                selected_city = City.query.get(selected_city_id)
 
-    city_filter = request.args.get('city')
-    specialisation_filter = request.args.get('specialisation')
-    english_filter = request.args.get('english')
+                selected_english_id = opportunity_form.english.data
+                selected_english = English.query.get(selected_english_id)
 
-    filtered_opportunities = all_opportunities
+                selected_specialisation_id = opportunity_form.specialisation.data
+                selected_specialisation = Specialisation.query.get(
+                    selected_specialisation_id)
 
-    if city_filter:
-        filtered_opportunities = [opp for opp in filtered_opportunities if opp.city.name == city_filter]
-    if specialisation_filter:
-        filtered_opportunities = [opp for opp in filtered_opportunities if
-                                  opp.specialisation.name == specialisation_filter]
-    if english_filter:
-        filtered_opportunities = [opp for opp in filtered_opportunities if opp.english.level == english_filter]
+                selected_experience_id = opportunity_form.experience.data
+                selected_experience = Experience.query.get(selected_experience_id)
 
-    filtered_opportunities = sorted(filtered_opportunities, key=lambda opp: opp.id, reverse=True)
+                new_opportunity = Opportunity(
+                    title=opportunity_form.title.data,
+                    english=selected_english,
+                    specialisation=selected_specialisation,
+                    experience=selected_experience,
+                    city=selected_city,
+                    description=opportunity_form.description.data,
+                    salary=opportunity_form.salary.data,
+                    team=Team.query.get(current_user.id),
+                    visible=True,
 
-    if request.method == 'POST':
-        if opportunity_form.validate_on_submit():
-            selected_city_id = opportunity_form.op_city.data
-            selected_city = City.query.get(selected_city_id)
-
-            selected_english_id = opportunity_form.op_english.data
-            selected_english = English.query.get(selected_english_id)
-
-            selected_specialisation_id = opportunity_form.op_specialisation.data
-            selected_specialisation = Specialisation.query.get(
-                selected_specialisation_id)
-
-            selected_experience_id = opportunity_form.op_experience.data
-            selected_experience = Experience.query.get(selected_experience_id)
-
-            new_opportunity = Opportunity(
-                title=opportunity_form.op_title.data,
-                english=selected_english,
-                specialisation=selected_specialisation,
-                experience=selected_experience,
-                city=selected_city,
-                description=opportunity_form.op_description.data,
-                salary=opportunity_form.op_salary.data,
-                team=Team.query.get(current_user.id)
-
-            )
-            db.session.add(new_opportunity)
-            db.session.commit()
-
-            return redirect(url_for('core.opportunity', opp_id=new_opportunity.id))
-
-    return render_template('opportunities.html', title='Вакансії', opportunities=filtered_opportunities,
-                           opportunity_form=opportunity_form, cities=cities,
-                           english_levels=english_levels,
-                           specialisations=specialisations, experiences=experiences)
+                )
+                db.session.add(new_opportunity)
+                db.session.commit()
+                return redirect(url_for('core.opportunity', opp_id=new_opportunity.id))
+    if team:
+        return render_template('team_profile.html', title=team.company, team=team, opportunity_form=opportunity_form,
+                               opportunities=my_opportunities, cities=cities,
+                               english_levels=english_levels,
+                               specialisations=specialisations, experiences=experiences)
+    return render_template('404.html', title='Not found')
 
 
-@core.route('/opportunities/<int:opp_id>')
-def opportunity(opp_id=None):
+@core.route('/opportunities', methods=('GET', 'POST'))
+@candidate_required
+def opportunities():
+    all_opportunities = Opportunity.query.filter(Opportunity.specialisation == current_user.specialisation,
+                                                 Opportunity.visible == True)
+
+    return render_template('opportunities.html', title='Вакансії', opportunities=all_opportunities)
+
+
+@core.route('/opportunities/<int:opp_id>', methods=['GET', 'POST'])
+@auth_required
+def opportunity(opp_id):
     selected_opportunity = Opportunity.query.get(opp_id)
-    return render_template('opportunity.html', title=selected_opportunity.title, opportunity=selected_opportunity)
+    candidates_for_opportunity = Candidate.query.filter(
+        (Candidate.city == selected_opportunity.city) &
+        (Candidate.specialisation.has(name=selected_opportunity.specialisation.name)) &
+        (Candidate.english_id >= selected_opportunity.english_id)
+    ).all()
+    if current_user.is_authenticated and current_user.id == selected_opportunity.team.id:
+        if request.method == 'POST':
+
+            if selected_opportunity:
+                selected_opportunity.visible = False
+                db.session.commit()
+                return redirect(url_for('core.team_profile', team_id=selected_opportunity.team.id))
+    return render_template('opportunity.html', title=selected_opportunity.title, opportunity=selected_opportunity,
+                           candidates=candidates_for_opportunity)

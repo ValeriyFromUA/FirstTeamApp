@@ -5,6 +5,7 @@
 <h6>На цій сторінці є інформація, але дивитися її можуть не всі (вірніше дивтися можуть всі, але не кожен може
     дивитися)</h6>
 {% endif %}
+
 {% if current_user.is_authenticated and current_user.user_type == 'team'%}
 {% for candidate in  candidates %}
 <div class="alert alert-dark" role="alert">
@@ -13,22 +14,11 @@
         <a href="{{ url_for('core.candidate_profile', candidate_id=candidate.id) }}">
             <h5 class="text-dark">{{ candidate.first_name }} {{ candidate.last_name }}</h5>
         </a>
-        <div>
-            <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#CV_">
-                Тут заховано резюме...
-            </button>
-        </div>
+        <p>{{ candidate.city.name }}</p>
     </div>
     <p>Працює з <b>{{ candidate.specialisation.name }}</b> ({{ candidate.experience.name }}) <br> Англійська <b>{{
         candidate.english.level }}</b></p>
 
-    <div class="modal fade" id="CV_">
-        <div class="modal-dialog modal-xl">
-            <div class="modal-content">
-                <iframe src="/static/cv/{{candidate.cv}}" width="100%" height="1200"></iframe>
-            </div>
-        </div>
-    </div>
 </div>
 
 

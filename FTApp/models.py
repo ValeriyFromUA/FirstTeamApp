@@ -128,7 +128,7 @@ class Team(db.Model, UserMixin):
     confirmed = db.Column(db.Boolean, nullable=False, default=False)
     creation_date = db.Column(db.DateTime, default=db.func.now())
     company = db.Column(db.String(300), nullable=False)
-    website = db.Column(db.String(300), nullable=False)
+    website = db.Column(db.String(300), nullable=True)
     telegram = db.Column(db.String(300), nullable=True)
     facebook = db.Column(db.String(300), nullable=True)
     instagram = db.Column(db.String(300), nullable=True)
@@ -181,12 +181,12 @@ class Opportunity(db.Model):
 
     team_id = db.Column(db.Integer, db.ForeignKey('teams.id'))
     team = db.relationship('Team', backref='opportunities')
-
+    visible = db.Column(db.Boolean, nullable=False, default=True)
     description = db.Column(db.String(5000))
     salary = db.Column(db.Integer)
     creation_date = db.Column(db.DateTime, default=db.func.now())
 
-    def __init__(self, title, specialisation, experience, english, description, salary, city, team):
+    def __init__(self, title, specialisation, experience, english, description, salary, city, team, visible):
         self.title = title
         self.specialisation = specialisation
         self.experience = experience
@@ -195,32 +195,7 @@ class Opportunity(db.Model):
         self.salary = salary
         self.city = city
         self.team = team
-
-
-class Response(db.Model):
-    __tablename__ = 'responses'
-
-    id = db.Column(db.Integer, primary_key=True)
-
-    opportunity_id = db.Column(db.Integer, db.ForeignKey('opportunities.id'))
-    opportunity = db.relationship('Opportunity', backref='responses')
-
-    candidate_id = db.Column(db.Integer, db.ForeignKey('candidates.id'))
-    candidate = db.relationship('Candidate', backref='responses')
-
-    team_id = db.Column(db.Integer, db.ForeignKey('teams.id'))
-    team = db.relationship('Team', backref='responses')
-
-    creation_date = db.Column(db.DateTime, default=db.func.now())
-    user_read = db.Column(db.Boolean, nullable=False, default=False)
-    team_read = db.Column(db.Boolean, nullable=False, default=False)
-
-    def __init__(self, opportunity, candidate, team, user_read=False, team_read=False):
-        self.opportunity = opportunity
-        self.candidate = candidate
-        self.team = team
-        self.user_read = user_read
-        self.team_read = team_read
+        self.visible = visible
 
 
 class EmailConfirmation(db.Model):
@@ -236,14 +211,3 @@ class EmailConfirmation(db.Model):
         self.user_id = user_id
         self.team_id = team_id
         self.token = token
-
-
-class Complaint(db.Model):
-    __tablename__ = 'complaints'
-
-    id = db.Column(db.Integer, primary_key=True)
-    candidate_id = db.Column(db.Integer, db.ForeignKey('candidates.id'))
-    opportunity_id = db.Column(db.Integer, db.ForeignKey('opportunities.id'))
-    opportunity = db.relationship('Opportunity', backref='complaints')
-    creation_date = db.Column(db.DateTime, default=db.func.now())
-    description = db.Column(db.String(5000))

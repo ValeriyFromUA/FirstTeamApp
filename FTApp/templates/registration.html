@@ -21,13 +21,11 @@
     <div class="modal-dialog">
         <div class="modal-content">
 
-            <!-- Заголовок модального вікна -->
             <div class="modal-header">
                 <h4 class="modal-title">Форма кандидата</h4>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
 
-            <!-- Тіло модального вікна з формою -->
             <div class="modal-body">
                 <form method="POST" enctype="multipart/form-data" action="">
                     {{ candidate_form.hidden_tag() }}
@@ -90,15 +88,6 @@
                         <label for="about" class="form-label">Напишіть кілька слів про себе</label>
                         <textarea class="form-control" id="about" name="about" rows="5"></textarea>
                     </div>
-
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="show_me" name="show_me">
-                        <label class="form-check-label" for="show_me">Відображати мої контактні дані для всіх
-                            користувачів (профілі з відкритими даними доступні в каталозі, таким чином команди
-                            самостійно зможуть пропонувати Вам роботу, не чекаючи на Ваш відгук)</label>
-                    </div>
-
-
                     <div class="form-group">
                         <label for="city">Місто:</label>
                         <select class="form-control" id="city" name="city" required>
@@ -154,7 +143,6 @@
                 </form>
             </div>
 
-            <!-- Нижня частина модального вікна з кнопкою закриття -->
 
         </div>
     </div>
@@ -163,13 +151,13 @@
     <div class="modal-dialog">
         <div class="modal-content">
 
-            <!-- Заголовок модального вікна -->
+
             <div class="modal-header">
                 <h4 class="modal-title">Форма команди</h4>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
 
-            <!-- Тіло модального вікна з формою -->
+
             <div class="modal-body">
                 <form method="POST" enctype="multipart/form-data" action="">
                     {{ team_form.hidden_tag() }}
@@ -197,8 +185,9 @@
                         <input type="text" class="form-control" id="team_company" name="team_company" required>
                     </div>
                     <div class="mb-3">
-                        <label for="team_website" class="form-label">Сайт компанії</label>
-                        <input type="text" class="form-control" id="team_website" name="team_website">
+                        <label for="team_website" class="form-label">Посилання на сайт компанії</label>
+                        <input type="text" class="form-control" id="team_website" name="team_website"
+                               placeholder="https://www.your_company.com" required>
                     </div>
                     <div class="mb-3">
                         <label for="team_telegram" class="form-label">Telegram</label>
@@ -251,7 +240,6 @@
                 </form>
             </div>
 
-            <!-- Нижня частина модального вікна з кнопкою закриття -->
 
         </div>
     </div>
