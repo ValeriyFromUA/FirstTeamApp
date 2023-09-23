@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% block title %} {{title}}{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <h1>{{ opportunity.title }} {% if opportunity.visible == False %}
+                <div class="alert alert-danger"><h5>Вакансія закрита</h5></div>
+                {% endif %}
+            </h1>
+
+
+            <h6>{{opportunity.city.name}}</h6>
+            <p>{{ opportunity.description }}</p>
+
+        </div>
+        <div class="col-md-6 "><br>
+            <text>Пропонує:</text>
+            <br><br>
+            <a class="btn btn-warning" href="{{ url_for('main_router.team_profile', team_id=opportunity.team.id) }}"><h5
+                    class="text-dark">{{
+                opportunity.team.company
+                }}</h5></a><br>
+            <br>
+            <img src="{% if opportunity.team.profile_image %} /static/team_logo/{{opportunity.team.profile_image}} {% else %} /static/temp/company.png {% endif %}"
+                 height="200px" alt="none">
+            <div>
+                <br>
+                <h5>{{ opportunity.salary }} $</h5>
+                <p>Спеціалізація <b>{{ opportunity.specialisation.name }}</b></p>
+                <p>Бажаний рівень досвіду <b>{{ opportunity.experience.name }}</b></p>
+                <p>Необхідний рівень англійської <b>{{ opportunity.english.level }}</b></p>
+
+                {% if current_user.id == opportunity.team.id and current_user.user_type == 'team'%}
+                {% if opportunity.visible == True %}
+
+                <form method="POST" action="{{ url_for('main_router.opportunity', opp_id=opportunity.id) }}">
+                    <button type="submit" class="btn btn-warning">Закрити вакансію</button>
+                </form>
+                {% endif %}
+
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
+<br>
+{% if candidates %}
+<h4>Рекомендовані кандидати:</h4>
+{% endif %}
+{% for candidate in candidates %}
+
+<div class="alert alert-primary d-flex justify-content-between"
+     role="alert">
+    <a href="{{ url_for('main_router.candidate_profile', candidate_id=candidate.id) }}"
+       class="d-flex align-items-center">
+        <h5 class="text-dark d-inline">{{ candidate.first_name }} {{ candidate.last_name }}</h5>
+        <h6 class="text-dark d-inline ml-2">(працює з {{ candidate.specialisation.name }}, {{ candidate.experience.name
+            }}, англійська: {{ candidate.english.level }} )</h6>
+    </a>
+</div>
+{% endfor %}
+{% endif %}
+
+
+{% endblock %}

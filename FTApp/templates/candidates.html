@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %} {{title}}{% endblock %}
+{% block content %}
+{% if not current_user.is_authenticated or current_user.user_type != 'team'%}
+<h6>На цій сторінці є інформація, але дивитися її можуть не всі (вірніше дивтися можуть всі, але не кожен може
+    дивитися)</h6>
+{% endif %}
+
+{% if current_user.is_authenticated and current_user.user_type == 'team'%}
+<h4>Кандидати, підібрані на основі створених Вами вакансій:</h4>
+{% for candidate in  candidates %}
+<div class="alert alert-primary" role="alert">
+    <div class="d-flex justify-content-between align-items-center">
+
+        <a href="{{ url_for('main_router.candidate_profile', candidate_id=candidate.id) }}">
+            <h5 class="text-dark">{{ candidate.first_name }} {{ candidate.last_name }}</h5>
+        </a>
+        <p>{{ candidate.city.name }}</p>
+    </div>
+    <p>Працює з <b>{{ candidate.specialisation.name }}</b> ({{ candidate.experience.name }}) <br> Англійська <b>{{
+        candidate.english.level }}</b></p>
+
+</div>
+
+
+{% endfor %}
+{% endif %}
+{% endblock %}
