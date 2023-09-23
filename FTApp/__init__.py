@@ -1,8 +1,9 @@
-from flask_sqlalchemy import SQLAlchemy
 from flask import Flask
-from flask_login import LoginManager
-from FTApp.config import configurations
 from flask_bcrypt import Bcrypt
+from flask_login import LoginManager
+from flask_sqlalchemy import SQLAlchemy
+
+from FTApp.config import configurations
 
 login_manager = LoginManager()
 db = SQLAlchemy()
@@ -15,6 +16,8 @@ def create_app(config_name):
     db.init_app(app)
     login_manager.init_app(app)
     bcrypt.init_app(app)
-    from .routes import core
-    app.register_blueprint(core)
+    from FTApp.main.routes import main_router
+    app.register_blueprint(main_router)
+    from FTApp.auth.routes import auth
+    app.register_blueprint(auth)
     return app

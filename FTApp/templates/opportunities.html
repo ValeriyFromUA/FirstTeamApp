@@ -1,11 +1,12 @@
 {% extends 'base.html' %}
 {% block title %} {{title}}{% endblock %}
 {% block content %}
+<h4>Ваканасії які Вам можуть підійти:</h4>
 {% for opportunity in  opportunities %}
 {% if opportunity.visible == True %}
-<div class="alert alert-dark d-flex justify-content-between"
+<div class="alert alert-primary d-flex justify-content-between"
      role="alert">
-    <a href="{{ url_for('core.opportunity', opp_id=opportunity.id) }}" class="d-flex align-items-center">
+    <a href="{{ url_for('main_router.opportunity', opp_id=opportunity.id) }}" class="d-flex align-items-center">
         <h5 class="text-dark d-inline">{{ opportunity.title }}</h5>
         <h6 class="text-dark d-inline ml-2">({{ opportunity.city.name }}, {{ opportunity.salary }} $)</h6>
     </a>

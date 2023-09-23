@@ -33,26 +33,31 @@
                     {{ candidate_form.errors }}
                     {% endif %}
                     <div class="mb-3">
-                        <label for="email" class="form-label">Введіть електронну пошту</label>
+                        <label for="email" class="form-label">Введіть електронну пошту<span
+                                class="required"> *</span></label>
                         <input type="email" class="form-control" id="email" name="email" required
                                pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$">
                     </div>
                     <div class="mb-3">
-                        <label for="password" class="form-label">Вигадайте пароль</label>
+                        <label for="password" class="form-label">Вигадайте пароль<span
+                                class="required"> *</span></label>
                         <input type="password" class="form-control" id="password" name="password" required>
                     </div>
                     <div class="mb-3">
-                        <label for="confirm_password" class="form-label">Повторіть пароль</label>
+                        <label for="confirm_password" class="form-label">Повторіть пароль<span
+                                class="required"> *</span></label>
                         <input type="password" class="form-control" id="confirm_password" name="confirm_password"
                                required>
                     </div>
 
                     <div class="mb-3">
-                        <label for="first_name" class="form-label">Ім'я</label>
+                        <label for="first_name" class="form-label">Ім'я<span
+                                class="required"> *</span></label>
                         <input type="text" class="form-control" id="first_name" name="first_name" required>
                     </div>
                     <div class="mb-3">
-                        <label for="last_name" class="form-label">Прізвище</label>
+                        <label for="last_name" class="form-label">Прізвище<span
+                                class="required"> *</span></label>
                         <input type="text" class="form-control" id="last_name" name="last_name" required>
                     </div>
                     <div class="mb-3">
@@ -80,7 +85,8 @@
                                pattern="https:\/\/github\.com\/.*" placeholder="https://github.com/">
                     </div>
                     <div class="mb-3">
-                        <label for="phone" class="form-label">Телефон</label>
+                        <label for="phone" class="form-label">Телефон<span
+                                class="required"> *</span></label>
                         <input type="text" class="form-control" id="phone" name="phone" required pattern="^\+380\d{9}$"
                                placeholder="в форматі +380921112233">
                     </div>
@@ -89,7 +95,8 @@
                         <textarea class="form-control" id="about" name="about" rows="5"></textarea>
                     </div>
                     <div class="form-group">
-                        <label for="city">Місто:</label>
+                        <label for="city">Місто:<span
+                                class="required"> *</span></label>
                         <select class="form-control" id="city" name="city" required>
                             <option value="" disabled selected></option>
                             {% for city_id, city_name in cities %}
@@ -99,7 +106,8 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="english">Рівень володіння Англійською мовою:</label>
+                        <label for="english">Рівень володіння Англійською мовою:<span
+                                class="required"> *</span></label>
                         <select class="form-control" id="english" name="english" required>
                             <option value="" disabled selected></option>
                             {% for english_id, english_level in english_levels %}
@@ -109,7 +117,8 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="specialisation">Оберіть мову Вашу програмування або спеціалізацію:</label>
+                        <label for="specialisation">Оберіть мову Вашу програмування або спеціалізацію:<span
+                                class="required"> *</span></label>
                         <select class="form-control" id="specialisation" name="specialisation" required>
                             <option value="" disabled selected></option>
                             {% for specialisation_id, specialisation_name in specialisations %}
@@ -119,7 +128,8 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="experience">Ваш досвід в розробці:</label>
+                        <label for="experience">Ваш досвід в розробці:<span
+                                class="required"> *</span></label>
                         <select class="form-control" id="experience" name="experience" required>
                             <option value="" disabled selected></option>
                             {% for experience_id, experience_name in experiences %}
@@ -165,27 +175,32 @@
                     {{ team_form.errors }}
                     {% endif %}
                     <div class="mb-3">
-                        <label for="team_email" class="form-label">Введіть електронну пошту</label>
+                        <label for="team_email" class="form-label">Введіть електронну пошту<span
+                                class="required"> *</span></label>
                         <input type="text" class="form-control" id="team_email" name="team_email" required
                                pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$">
                     </div>
                     <div class="mb-3">
-                        <label for="team_password" class="form-label">Вигадайте пароль</label>
+                        <label for="team_password" class="form-label">Вигадайте пароль<span
+                                class="required"> *</span></label>
                         <input type="password" class="form-control" id="team_password" name="team_password" required>
                     </div>
                     <div class="mb-3">
-                        <label for="team_confirm_password" class="form-label">Повторіть пароль</label>
+                        <label for="team_confirm_password" class="form-label">Повторіть пароль<span
+                                class="required"> *</span></label>
                         <input type="password" class="form-control" id="team_confirm_password"
                                name="team_confirm_password"
                                required>
                     </div>
 
                     <div class="mb-3">
-                        <label for="team_company" class="form-label">Назва компанії</label>
+                        <label for="team_company" class="form-label">Назва компанії<span
+                                class="required"> *</span></label>
                         <input type="text" class="form-control" id="team_company" name="team_company" required>
                     </div>
                     <div class="mb-3">
-                        <label for="team_website" class="form-label">Посилання на сайт компанії</label>
+                        <label for="team_website" class="form-label">Посилання на сайт компанії<span
+                                class="required"> *</span></label>
                         <input type="text" class="form-control" id="team_website" name="team_website"
                                placeholder="https://www.your_company.com" required>
                     </div>
@@ -221,7 +236,8 @@
 
 
                     <div class="form-group">
-                        <label for="team_city">Місто:</label>
+                        <label for="team_city">Місто:<span
+                                class="required"> *</span></label>
                         <select class="form-control" id="team_city" name="team_city" required>
                             <option value="" disabled selected></option>
                             {% for city_id, city_name in cities %}

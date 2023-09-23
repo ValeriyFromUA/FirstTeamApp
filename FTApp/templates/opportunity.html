@@ -15,9 +15,13 @@
 
         </div>
         <div class="col-md-6 "><br>
-            <a href="{{ url_for('core.team_profile', team_id=opportunity.team.id) }}"><h5 class="text-dark">{{
+            <text>Пропонує:</text>
+            <br><br>
+            <a class="btn btn-warning" href="{{ url_for('main_router.team_profile', team_id=opportunity.team.id) }}"><h5
+                    class="text-dark">{{
                 opportunity.team.company
                 }}</h5></a><br>
+            <br>
             <img src="{% if opportunity.team.profile_image %} /static/team_logo/{{opportunity.team.profile_image}} {% else %} /static/temp/company.png {% endif %}"
                  height="200px" alt="none">
             <div>
@@ -30,7 +34,7 @@
                 {% if current_user.id == opportunity.team.id and current_user.user_type == 'team'%}
                 {% if opportunity.visible == True %}
 
-                <form method="POST" action="{{ url_for('core.opportunity', opp_id=opportunity.id) }}">
+                <form method="POST" action="{{ url_for('main_router.opportunity', opp_id=opportunity.id) }}">
                     <button type="submit" class="btn btn-warning">Закрити вакансію</button>
                 </form>
                 {% endif %}
@@ -43,10 +47,15 @@
     </div>
 </div>
 <br>
+{% if candidates %}
+<h4>Рекомендовані кандидати:</h4>
+{% endif %}
 {% for candidate in candidates %}
-<div class="alert alert-dark d-flex justify-content-between"
+
+<div class="alert alert-primary d-flex justify-content-between"
      role="alert">
-    <a href="{{ url_for('core.candidate_profile', candidate_id=candidate.id) }}" class="d-flex align-items-center">
+    <a href="{{ url_for('main_router.candidate_profile', candidate_id=candidate.id) }}"
+       class="d-flex align-items-center">
         <h5 class="text-dark d-inline">{{ candidate.first_name }} {{ candidate.last_name }}</h5>
         <h6 class="text-dark d-inline ml-2">(працює з {{ candidate.specialisation.name }}, {{ candidate.experience.name
             }}, англійська: {{ candidate.english.level }} )</h6>

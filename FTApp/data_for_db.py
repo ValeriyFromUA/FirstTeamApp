@@ -1,10 +1,7 @@
-from FTApp.logger import get_logger
-from FTApp.run import app
 from FTApp import db
-from FTApp.models import City, English, Experience, Specialisation
-from faker import Faker
+from FTApp.main.models import City, English, Experience, Specialisation
+from run import app
 
-fake = Faker('uk_UA')
 CITY_LIST = [
     'Віддалена робота',
     'Вінниця',

@@ -1,12 +1,17 @@
 import os
-
-from FTApp.constants import SECRET
+from datetime import datetime
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+STATIC_DIR = os.path.join(BASE_DIR, 'static')
+CV_DIR = os.path.join(STATIC_DIR, 'cv')
+TEAM_LOGO_DIR = os.path.join(STATIC_DIR, 'team_logo')
+CANDIDATE_PIC_DIR = os.path.join(STATIC_DIR, 'candidate_pic')
+CURRENT_DATATIME = datetime.now()
+FILENAME_PREFIX = CURRENT_DATATIME.strftime('%Y%m%d%H%M%S')
 
 
 class Config(object):
-    SECRET_KEY = SECRET
+    SECRET_KEY = os.environ.get('SECRET_KEY') or 'fsfhshsughusgh323fdfgdg'
 
     # Turn off Flask-SQLAlchemy event system
     SQLALCHEMY_TRACK_MODIFICATIONS = True
@@ -32,6 +37,7 @@ class DevelopmentConfig(Config):
 
 class TestingConfig(Config):
     SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(BASE_DIR, 'test.db')
+    TESTING = True
 
 
 configurations = {

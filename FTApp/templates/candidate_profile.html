@@ -2,16 +2,17 @@
 {% block title %} {{title}}{% endblock %}
 {% block content %}
 
-<!-- Перший контейнер -->
 <div class="container">
     <div class="row">
         <div class="col-md-6">
-            <h1>{{candidate.first_name}} {{candidate.last_name}}</h1>
+            <h1>{{candidate.first_name}} {{candidate.last_name}}
+            </h1>
 
 
             <h6>місто: {{candidate.city.name}}</h6>
             <h6>Працює з {{candidate.specialisation.name}} ({{candidate.experience.name}})</h6>
             <h6>Рівень володіння англійською {{candidate.english.level}}</h6>
+
             <br>
             <div class="row">
                 <div class="col-md-12">
@@ -32,7 +33,6 @@
             <br>
             <p>{{ candidate.about }}</p>
 
-            <!-- Вміст першого контейнера -->
         </div>
         <div class="col-md-6 ">
             <img src="{% if candidate.profile_image %}/static/candidate_pic/{{candidate.profile_image}} {% else %} /static/temp/user.jpg {% endif %}"
@@ -68,111 +68,130 @@
                 <br>
                 <text>email: {{ candidate.email }}</text>
                 {% endif %}
-                <div class="container mx-auto">
 
-                </div>
-            </div>
-
-        </div>
-    </div>
-</div>
-
-
-{% if current_user.id == candidate.id and current_user.user_type == 'candidate'%}
-<div class="container mx-auto">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="container">
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#EDIT">
-                    Редагувати свої данні
-                </button>
-            </div>
-            <div class="modal fade" id="EDIT">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h4 class="modal-title">Можете міняти Ваші данні</h4>
-                            <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        </div>
-                        <div class="container">
-                            <form method="POST" enctype="multipart/form-data" action="">
-                                {{ candidate_form.hidden_tag() }}
-                                {% if candidate_form.errors %}
-                                {{ candidate_form.errors }}
-                                {% endif %}
-                                <div class="mb-3">
-                                    <label for="first_name" class="form-label">Ім'я</label>
-                                    <input type="text" class="form-control" id="first_name" name="first_name" required
-                                           value="{{ candidate.first_name }}">
-                                </div>
-                                <div class="mb-3">
-                                    <label for="last_name" class="form-label">Прізвище</label>
-                                    <input type="text" class="form-control" id="last_name" name="last_name" required
-                                           value="{{ candidate.last_name }}">
-                                </div>
-                                <div class="mb-3">
-                                    <label for="telegram" class="form-label">Telegram</label>
-                                    <input type="text" class="form-control" id="telegram" name="telegram"
-                                           value="{{ candidate.telegram }}">
-                                </div>
-                                <div class="mb-3">
-                                    <label for="facebook" class="form-label">Facebook</label>
-                                    <input type="text" class="form-control" id="facebook" name="facebook"
-                                           pattern="https:\/\/www\.facebook\.com\/.*"
-                                           placeholder="https://www.facebook.com/" value="{{ candidate.facebook }}">
-                                </div>
-                                <div class="mb-3">
-                                    <label for="instagram" class="form-label">Instagram</label>
-                                    <input type="text" class="form-control" id="instagram" name="instagram"
-                                           pattern="https:\/\/www\.instagram\.com\/.*"
-                                           placeholder="https://www.instagram.com/"
-                                           value="{{ candidate.instagram }}">
-                                </div>
-                                <div class="mb-3">
-                                    <label for="linkedin" class="form-label">LinkedIn</label>
-                                    <input type="text" class="form-control" id="linkedin" name="linkedin"
-                                           pattern="https:\/\/www\.linkedin\.com\/.*"
-                                           placeholder="https://www.linkedin.com/" value="{{ candidate.linkedin }}">
-                                </div>
-                                <div class="mb-3">
-                                    <label for="github" class="form-label">GitHub</label>
-                                    <input type="text" class="form-control" id="github" name="github"
-                                           pattern="https:\/\/github\.com\/.*" placeholder="https://github.com/"
-                                           value="{{ candidate.github }}">
-                                </div>
-                                <div class="mb-3">
-                                    <label for="phone" class="form-label">Телефон</label>
-                                    <input type="text" class="form-control" id="phone" name="phone" required
-                                           pattern="^\+380\d{9}$"
-                                           placeholder="в форматі +380921112233" value="{{ candidate.phone }}">
-                                </div>
-                                <div class="mb-3">
-                                    <label for="about" class="form-label">Напишіть кілька слів про себе</label>
-                                    <textarea class="form-control" id="about" name="about" rows="5"
-                                    >{{ candidate.about }}</textarea>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="profile_image" class="form-label">Додайте фото (jpg або png)</label>
-                                    <input type="file" class="form-control" id="profile_image" name="profile_image"
-                                           accept=".jpg, .jpeg, .png">
-                                </div>
-
-                                <div class="mb-3">
-                                    <label for="cv" class="form-label">Додайте резюме в форматі PDF</label>
-                                    <input type="file" class="form-control" id="cv" name="cv" accept=".pdf">
-                                </div>
-
-                                <button type="submit" class="btn btn-primary" value="Edit Candidate">
-                                    Змінити данні
+                {% if current_user.id == candidate.id and
+                current_user.user_type == 'candidate'%}
+                <div class="container ml-auto">
+                    <br>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="container">
+                                <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#EDIT">
+                                    Редагувати свої данні
                                 </button>
-                                {% endif %}
-                            </form>
+                            </div>
+                            <div class="modal fade" id="EDIT">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h4 class="modal-title">Можете міняти Ваші данні</h4>
+                                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                        </div>
+                                        <div class="container">
+                                            <form method="POST" enctype="multipart/form-data" action="">
+                                                {{ candidate_form.hidden_tag() }}
+                                                {% if candidate_form.errors %}
+                                                {{ candidate_form.errors }}
+                                                {% endif %}
+                                                <div class="mb-3">
+                                                    <label for="first_name" class="form-label">Ім'я<span
+                                                            class="required"> *</span></label>
+                                                    <input type="text" class="form-control" id="first_name"
+                                                           name="first_name" required
+                                                           value="{{ candidate.first_name }}">
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="last_name" class="form-label">Прізвище<span
+                                                            class="required"> *</span></label>
+                                                    <input type="text" class="form-control" id="last_name"
+                                                           name="last_name" required
+                                                           value="{{ candidate.last_name }}">
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="telegram" class="form-label">Telegram</label>
+                                                    <input type="text" class="form-control" id="telegram"
+                                                           name="telegram"
+                                                           value="{{ candidate.telegram }}">
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="facebook" class="form-label">Facebook</label>
+                                                    <input type="text" class="form-control" id="facebook"
+                                                           name="facebook"
+                                                           pattern="https:\/\/www\.facebook\.com\/.*"
+                                                           placeholder="https://www.facebook.com/"
+                                                           value="{{ candidate.facebook }}">
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="instagram" class="form-label">Instagram</label>
+                                                    <input type="text" class="form-control" id="instagram"
+                                                           name="instagram"
+                                                           pattern="https:\/\/www\.instagram\.com\/.*"
+                                                           placeholder="https://www.instagram.com/"
+                                                           value="{{ candidate.instagram }}">
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="linkedin" class="form-label">LinkedIn</label>
+                                                    <input type="text" class="form-control" id="linkedin"
+                                                           name="linkedin"
+                                                           pattern="https:\/\/www\.linkedin\.com\/.*"
+                                                           placeholder="https://www.linkedin.com/"
+                                                           value="{{ candidate.linkedin }}">
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="github" class="form-label">GitHub</label>
+                                                    <input type="text" class="form-control" id="github" name="github"
+                                                           pattern="https:\/\/github\.com\/.*"
+                                                           placeholder="https://github.com/"
+                                                           value="{{ candidate.github }}">
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="phone" class="form-label">Телефон<span
+                                                            class="required"> *</span></label>
+                                                    <input type="text" class="form-control" id="phone" name="phone"
+                                                           required
+                                                           pattern="^\+380\d{9}$"
+                                                           placeholder="в форматі +380921112233"
+                                                           value="{{ candidate.phone }}">
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="about" class="form-label">Напишіть кілька слів про
+                                                        себе</label>
+                                                    <textarea class="form-control" id="about" name="about" rows="5"
+                                                    >{{ candidate.about }}</textarea>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="profile_image" class="form-label">Додайте фото (jpg або
+                                                        png)</label>
+                                                    <input type="file" class="form-control" id="profile_image"
+                                                           name="profile_image"
+                                                           accept=".jpg, .jpeg, .png">
+                                                </div>
+
+                                                <div class="mb-3">
+                                                    <label for="cv" class="form-label">Додайте резюме в форматі
+                                                        PDF</label>
+                                                    <input type="file" class="form-control" id="cv" name="cv"
+                                                           accept=".pdf">
+                                                </div>
+
+                                                <button type="submit" class="btn btn-primary" value="Edit Candidate">
+                                                    Змінити данні
+                                                </button>
+                                                {% endif %}
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
+
             </div>
+
         </div>
     </div>
 </div>
+
 
 {% endblock %}

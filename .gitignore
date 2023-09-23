@@ -129,6 +129,7 @@ dmypy.json
 prod.env
 
 # local file storage folders
-/FTApp/static
 /FTApp/media/
 /FTApp/fake_data_for_db.py
+/FTApp/test.db
+/FTApp/dev.db

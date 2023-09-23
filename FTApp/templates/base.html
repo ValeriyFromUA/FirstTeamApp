@@ -10,10 +10,105 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const form = document.querySelector('form');
+        const submitButton = document.querySelector('button[type="submit"]');
+
+        form.addEventListener('input', function () {
+            const requiredFields = form.querySelectorAll('[required]');
+            let allFieldsValid = true;
+
+            requiredFields.forEach(function (field) {
+                if (!field.validity.valid) {
+                    allFieldsValid = false;
+                }
+            });
+
+            if (allFieldsValid) {
+                submitButton.disabled = false;
+            } else {
+                submitButton.disabled = true;
+            }
+        });
+    });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </script>
+    <style>
+    .required {
+        color: red;
+        font-size: smaller;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </style>
 
 </head>
 <body>
-<header class="p-3 bg-dark text-white">
+<header class="p-3 bg-primary text-white">
     <div class="container">
         <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
             <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
@@ -22,32 +117,41 @@
                 </svg>
             </a>
 
-            <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-                <li><a href="{{ url_for('core.main') }}" class="nav-link px-2 text-secondary">Головна сторінка</a></li>
+            <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0 ">
+                <li><a href="{{ url_for('main_router.main') }}"
+                       class="nav-link px-2 {% if 'main' in request.path %}text-muted{% else %}text-white{% endif %}">Головна
+                    сторінка</a></li>
                 {% if current_user.is_authenticated and current_user.user_type == 'team'%}
-                <li><a href="{{ url_for('core.candidates') }}" class="nav-link px-2 text-white">Кандидати</a></li>
-                {% endif %}
-                {% if current_user.is_authenticated and current_user.user_type == 'candidate'%}
-                <li><a href="{{ url_for('core.opportunities') }}" class="nav-link px-2 text-white">Мої можливості</a>
+                <li><a href="{{ url_for('main_router.candidates') }}"
+                       class="nav-link px-2 {% if 'candidates' in request.path %}text-muted{% else %}text-white{% endif %}">Кандидати</a>
                 </li>
                 {% endif %}
-                <li><a href="#" class="nav-link px-2 text-white">FAQs</a></li>
-                <li><a href="#" class="nav-link px-2 text-white">About</a></li>
+                {% if current_user.is_authenticated and current_user.user_type == 'candidate'%}
+                <li><a href="{{ url_for('main_router.opportunities') }}"
+                       class="nav-link px-2 {% if 'opportunities' in request.path %}text-muted{% else %}text-white{% endif %}">Мої
+                    можливості</a>
+                </li>
+                {% endif %}
             </ul>
 
             <div class="text-end">
                 {% if not current_user.is_authenticated %}
-                <a href="{{ url_for('core.login') }}" class="btn btn-outline-light me-2">Увійти</a>
-                <a href="{{ url_for('core.registration') }}" class="btn btn-warning">Створити акаунт</a>
+                <a href="{{ url_for('auth.login') }}"
+                   class="btn {% if 'login' in request.path %}btn-primary-disabled{% else %}btn-warning{% endif %}">{%
+                    if 'login' in request.path %}{% else %}Увійти{% endif %}</a>
+                <a href="{{ url_for('auth.registration') }}"
+                   class="btn {% if 'registration' in request.path %}btn-primary-disabled{% else %}btn-warning{% endif %}">{%
+                    if 'registration' in request.path %}{% else %}Створити
+                    акаунт{% endif %}</a>
                 {% endif %}
                 {% if current_user.is_authenticated %}
-                <a href="{{ url_for('core.logout') }}" class="btn btn-outline-light me-2">Вийти</a>
+                <a href="{{ url_for('auth.logout') }}" class="btn btn-outline-light me-2">Вийти</a>
                 {% if current_user.user_type == 'team' %}
-                <a href="{{ url_for('core.team_profile', team_id=current_user.id) }}"
+                <a href="{{ url_for('main_router.team_profile', team_id=current_user.id) }}"
                    class="btn btn-outline-light me-2">{{ current_user.company }}</a>
                 {% endif %}
                 {% if current_user.user_type == 'candidate' %}
-                <a href="{{ url_for('core.candidate_profile', candidate_id=current_user.id) }}"
+                <a href="{{ url_for('main_router.candidate_profile', candidate_id=current_user.id) }}"
                    class="btn btn-outline-light me-2">{{ current_user.first_name }}</a>
                 {% endif %}
                 {% endif %}

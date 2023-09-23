@@ -7,11 +7,12 @@
 {% endif %}
 
 {% if current_user.is_authenticated and current_user.user_type == 'team'%}
+<h4>Кандидати, підібрані на основі створених Вами вакансій:</h4>
 {% for candidate in  candidates %}
-<div class="alert alert-dark" role="alert">
+<div class="alert alert-primary" role="alert">
     <div class="d-flex justify-content-between align-items-center">
 
-        <a href="{{ url_for('core.candidate_profile', candidate_id=candidate.id) }}">
+        <a href="{{ url_for('main_router.candidate_profile', candidate_id=candidate.id) }}">
             <h5 class="text-dark">{{ candidate.first_name }} {{ candidate.last_name }}</h5>
         </a>
         <p>{{ candidate.city.name }}</p>

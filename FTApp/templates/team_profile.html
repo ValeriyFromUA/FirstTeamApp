@@ -19,7 +19,8 @@
                  height="200px" alt="none">
             <div>
                 {% if team.website %}
-                <br><a href="{{ team.website }}" target="_blank">Сайт компанії</a>
+                <br>
+                <text>{{ team.website }}</text>
                 {% endif %}
 
                 {% if team.linkedin %}
@@ -73,23 +74,27 @@
                         {{ opportunity_form.errors }}
                         {% endif %}
                         <div class="mb-3">
-                            <label for="title" class="form-label">Заголовок вакансії</label>
+                            <label for="title" class="form-label">Заголовок вакансії<span
+                                    class="required"> *</span></label>
                             <input type="text" class="form-control" id="title" name="title" required>
                         </div>
                         <div class="mb-3">
-                            <label for="description" class="form-label">Напишіть кілька слів про вакансію</label>
+                            <label for="description" class="form-label">Напишіть кілька слів про вакансію<span
+                                    class="required"> *</span></label>
                             <textarea class="form-control" id="description" name="description" rows="5"
                                       required></textarea>
                         </div>
                         <div class="mb-3">
-                            <label for="salary" class="form-label">Зарплата в $</label>
+                            <label for="salary" class="form-label">Зарплата в $<span
+                                    class="required"> *</span></label>
                             <input type="number" class="form-control" id="salary" name="salary" min="1"
                                    max="100000"
                                    required>
                         </div>
 
                         <div class="form-group">
-                            <label for="city">Місто в якому пропонуєте роботу:</label>
+                            <label for="city">Місто в якому пропонуєте роботу:<span
+                                    class="required"> *</span></label>
                             <select class="form-control" id="city" name="city" required>
                                 <option value="" disabled selected></option>
                                 {% for city_id, city_name in cities %}
@@ -100,7 +105,8 @@
 
                         <div class="form-group">
                             <label for="english">Рівень володіння Англійською мовою, який Ви очікуєте від
-                                Кандидата:</label>
+                                Кандидата:<span
+                                        class="required"> *</span></label>
                             <select class="form-control" id="english" name="english" required>
                                 <option value="" disabled selected></option>
                                 {% for english_id, english_level in english_levels %}
@@ -112,7 +118,8 @@
                         <div class="form-group">
                             <label for="specialisation">Оберіть мову програмування або спеціалізацію, якою має
                                 володіти
-                                Кандидат:</label>
+                                Кандидат:<span
+                                        class="required"> *</span></label>
                             <select class="form-control" id="specialisation" name="specialisation" required>
                                 <option value="" disabled selected></option>
                                 {% for specialisation_id, specialisation_name in specialisations %}
@@ -122,7 +129,8 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="experience">Бажаний досвід кандидата в розробці:</label>
+                            <label for="experience">Бажаний досвід кандидата в розробці:<span
+                                    class="required"> *</span></label>
                             <select class="form-control" id="experience" name="experience" required>
                                 <option value="" disabled selected></option>
                                 {% for experience_id, experience_name in experiences %}
@@ -143,11 +151,16 @@
 </div>
 <br>
 {% endif %}
+{% if current_user.id == team.id and current_user.user_type == 'team' %}
+<h4>Ваші вакансії:</h4>
+{% else %}
+<h4>Всі вакансії від {{ team.company}}:</h4>
+{% endif %}
 {% for opportunity in  opportunities %}
 
-<div class="alert alert-{% if opportunity.visible == False %}danger{% else %}dark{% endif %} d-flex justify-content-between"
+<div class="alert alert-{% if opportunity.visible == False %}danger{% else %}primary{% endif %} d-flex justify-content-between"
      role="alert">
-    <a href="{{ url_for('core.opportunity', opp_id=opportunity.id) }}" class="d-flex align-items-center">
+    <a href="{{ url_for('main_router.opportunity', opp_id=opportunity.id) }}" class="d-flex align-items-center">
         <h5 class="text-dark d-inline">{{ opportunity.title }}</h5>
         <h6 class="text-dark d-inline ml-2">({{ opportunity.city.name }}, {{ opportunity.salary }} $)</h6>
     </a>
